@@ -1,8 +1,8 @@
 package com.sychev.movieapp.network.responses
 
-import com.sychev.movieapp.network.model.MovieSearchDto
+import com.sychev.movieapp.network.model.MovieDto
 
 data class MovieResponse(
-    val movieSearchDto: MovieSearchDto
+    val movieDto: MovieDto
 ) {
 }

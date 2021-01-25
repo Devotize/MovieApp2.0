@@ -6,6 +6,8 @@ interface DomainMovieMapper <T, DomainMovieModel> {
 
     fun fromDomainMovie(domainModel: DomainMovieModel): T
 
+
+
 }
 
 interface DomainMovieSearchMapper<T,DomainMovieSearch> {
@@ -13,6 +15,10 @@ interface DomainMovieSearchMapper<T,DomainMovieSearch> {
     fun toDomainMovieSearch(model: T): DomainMovieSearch
 
     fun fromDomainMovieSearch(domainModel: DomainMovieSearch): T
+
+    fun toDomainMovieList(list: List<T>): List<DomainMovieSearch>
+
+    fun fromDomainMovieList(domainList: List<DomainMovieSearch>): List<T>
 
 
 }

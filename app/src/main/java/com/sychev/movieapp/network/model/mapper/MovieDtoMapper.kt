@@ -154,4 +154,16 @@ class MovieDtoMapper
             fromDomainGenre(it)
         }
     }
+
+    override fun toDomainMovieList(list: List<MovieSearchDto>): List<MovieSearch> {
+        return list.map{
+            toDomainMovieSearch(it)
+        }
+    }
+
+    override fun fromDomainMovieList(domainList: List<MovieSearch>): List<MovieSearchDto> {
+        return domainList.map{
+            fromDomainMovieSearch(it)
+        }
+    }
 }
