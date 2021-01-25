@@ -1,17 +1,22 @@
 package com.sychev.movieapp.network.model.mapper
 
 import com.sychev.movieapp.domain.model.Movie
+import com.sychev.movieapp.domain.model.Movie.Collection
+import com.sychev.movieapp.domain.model.Movie.Genre
 import com.sychev.movieapp.domain.model.MovieSearch
 import com.sychev.movieapp.domain.util.DomainCollectionMapper
+import com.sychev.movieapp.domain.util.DomainGenreMapper
 import com.sychev.movieapp.domain.util.DomainMovieMapper
 import com.sychev.movieapp.domain.util.DomainMovieSearchMapper
 import com.sychev.movieapp.network.model.MovieDto
+import com.sychev.movieapp.network.model.MovieDto.*
 import com.sychev.movieapp.network.model.MovieSearchDto
 
 class MovieDtoMapper
     : DomainMovieSearchMapper<MovieSearchDto, MovieSearch>,
         DomainMovieMapper<MovieDto, Movie>,
-        DomainCollectionMapper<MovieDto.Collection, Movie.Collection>
+        DomainCollectionMapper<CollectionDto, Collection>,
+        DomainGenreMapper<GenreDto, Genre>
 
 
 {
@@ -60,31 +65,54 @@ class MovieDtoMapper
             backdropPath = model.backdropPath,
             belongsToCollection = model.belongsToCollection?.let { toDomainCollection(it) },
             budget = model.budget,
-            genres = ,
-            homepage = ,
-            id = ,
-            imdbId = ,
-            originalLanguage = ,
-            originalTitle = ,
-            overview = ,
-            poserPath = ,
-            releaseDate = ,
-            revenue = ,
-            runtime = ,
-            status = null,
-            tagline = ,
-            title = ,
-            voteAverage = ,
-            voteCount = ,
+            genres = model.genres?.let{toDomainGenreList(it)},
+            homepage = model.homepage,
+            id = model.id,
+            imdbId = model.imdbId,
+            originalLanguage = model.originalLanguage,
+            originalTitle = model.originalTitle,
+            overview = model.overview,
+            posterPath = model.posterPath,
+            releaseDate = model.releaseDate,
+            revenue = model.revenue,
+            runtime = model.runtime,
+            status = model.status,
+            tagline = model.tagline,
+            title = model.title,
+            voteAverage = model.voteAverage,
+            voteCount = model.voteCount,
         )
     }
 
     override fun fromDomainMovie(domainModel: Movie): MovieDto {
-        TODO("Not yet implemented")
+        return MovieDto(
+            adult = domainModel.adult,
+            backdropPath = domainModel.backdropPath,
+            belongsToCollection = domainModel.belongsToCollection?.let { fromDomainCollection(it) },
+            budget = domainModel.budget,
+            genres = domainModel.genres?.let{fromDomainGenreList(it)},
+            homepage = domainModel.homepage,
+            id = domainModel.id,
+            imdbId = domainModel.imdbId,
+            originalLanguage = domainModel.originalLanguage,
+            originalTitle = domainModel.originalTitle,
+            overview = domainModel.overview,
+            posterPath = domainModel.posterPath,
+            releaseDate = domainModel.releaseDate,
+            revenue = domainModel.revenue,
+            runtime = domainModel.runtime,
+            status = domainModel.status,
+            tagline = domainModel.tagline,
+            title = domainModel.title,
+            voteAverage = domainModel.voteAverage,
+            voteCount = domainModel.voteCount,
+            productCompanies = null,
+            productionCountries = null,
+        )
     }
 
-    override fun toDomainCollection(model: MovieDto.Collection): Movie.Collection {
-        return Movie.Collection(
+    override fun toDomainCollection(model: CollectionDto): Collection {
+        return Collection(
             model.id,
             model.name,
             model.posterPath,
@@ -92,12 +120,38 @@ class MovieDtoMapper
         )
     }
 
-    override fun fromDomainCollection(domainModel: Movie.Collection): MovieDto.Collection {
-        return MovieDto.Collection(
+    override fun fromDomainCollection(domainModel: Collection): CollectionDto {
+        return CollectionDto(
             domainModel.id,
             domainModel.name,
             domainModel.posterPath,
             domainModel.backdropPath
         )
+    }
+
+    override fun toDomainGenre(model: GenreDto): Genre {
+        return Genre(
+            model.id,
+            model.name
+        )
+    }
+
+    override fun fromDomainGenre(domainModel: Genre): GenreDto {
+        return GenreDto(
+            domainModel.id,
+            domainModel.name
+        )
+    }
+
+    override fun toDomainGenreList(list: List<GenreDto>): List<Genre> {
+        return list.map {
+            toDomainGenre(it)
+        }
+    }
+
+    override fun fromDomainGenreList(domainList: List<Genre>): List<GenreDto> {
+        return domainList.map{
+            fromDomainGenre(it)
+        }
     }
 }

@@ -1,6 +1,5 @@
 package com.sychev.movieapp.network.model
 
-import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 
 data class MovieDto(
@@ -9,11 +8,11 @@ data class MovieDto(
     @SerializedName("backdrop_path")
     val backdropPath: String? = null,
     @SerializedName("belongs_to_collection")
-    val belongsToCollection: Collection? = null,
+    val belongsToCollection: CollectionDto? = null,
     @SerializedName("budget")
     val budget: Float? = null,
     @SerializedName("genres")
-    val genres: List<Genre>,
+    val genres: List<GenreDto>? = null,
     @SerializedName("id")
     val homepage: String? = null,
     @SerializedName("id")
@@ -31,9 +30,9 @@ data class MovieDto(
     @SerializedName("poster_path")
     val posterPath: String? = null,
     @SerializedName("product_companies")
-    val productCompanies: List<ProductCompanies>,
+    val productCompanies: List<ProductCompanies>? = null,
     @SerializedName("production_countries")
-    val productionCountries: List<ProductionCountries>? = null ,
+    val productionCountries: List<ProductionCountries>? = null,
     @SerializedName("release_date")
     val releaseDate: String? = null,
     @SerializedName("revenue")
@@ -41,7 +40,7 @@ data class MovieDto(
     @SerializedName("runtime")
     val runtime: Float? = null,
     @SerializedName("spoken_languages")
-    val spokenLanguage: List<SpokenLanguage>,
+    val spokenLanguage: List<SpokenLanguage>? = null,
     @SerializedName("status")
     val status: String? = null,
     @SerializedName("tagline")
@@ -55,7 +54,7 @@ data class MovieDto(
     @SerializedName("vote_count")
     val voteCount: Float? = null
 ) {
-    data class Collection(
+    data class CollectionDto(
         @SerializedName("id")
         val id: Int? = null,
         @SerializedName("name")
@@ -65,7 +64,7 @@ data class MovieDto(
         @SerializedName("backdrop_path")
         val backdropPath: String? = null
     )
-    data class Genre(
+    data class GenreDto(
         @SerializedName("id")
         val id: Int? = null,
         @SerializedName("name")

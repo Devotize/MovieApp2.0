@@ -23,3 +23,15 @@ interface DomainCollectionMapper<CollectionDto, DomainCollection> {
 
     fun fromDomainCollection(domainModel: DomainCollection): CollectionDto
 }
+
+interface DomainGenreMapper<GenreDto, Genre> {
+
+    fun toDomainGenre(model: GenreDto): Genre
+
+    fun fromDomainGenre(domainModel: Genre): GenreDto
+
+    fun toDomainGenreList(list: List<GenreDto>): List<Genre>
+
+    fun fromDomainGenreList(domainList: List<Genre>): List<GenreDto>
+
+}
