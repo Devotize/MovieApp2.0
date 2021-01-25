@@ -7,9 +7,13 @@ import android.view.ViewGroup
 import androidx.compose.material.Text
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class MovieListFragment: Fragment() {
+
+    private val viewModel: MovieListViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -17,8 +21,9 @@ class MovieListFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View {
         return ComposeView(requireContext()).apply { 
-            setContent { 
-                Text(text = "This is moview list fragment")
+            setContent {
+                val movies = viewModel.movies.value
+                Text(text = "$movies")
             }
         }
             
