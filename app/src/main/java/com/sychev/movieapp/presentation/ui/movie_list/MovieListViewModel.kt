@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.sychev.movieapp.domain.model.MovieSearch
 import com.sychev.movieapp.repository.MovieRepository
 import com.sychev.movieapp.repository.MovieRepository_Impl
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class MovieListViewModel
@@ -16,16 +17,25 @@ class MovieListViewModel
 ) : ViewModel() {
 
     val movies: MutableState<List<MovieSearch>> = mutableStateOf(ArrayList())
+    val query: MutableState<String> = mutableStateOf("")
+    val loading = mutableStateOf(false)
+    val page = mutableStateOf(1)
 
-    init{
-        viewModelScope.launch {
-            makeSearch("transformers")
-        }
-    }
+    suspend fun makeSearch(){
+        loading.value = true
+        val result = repository.searchMovies(
+                query = this.query.value,
+                page = page.value
+            )
 
-    private suspend fun makeSearch(query: String){
-        val result = repository.searchMovies(query = query)
         movies.value = result
+        loading.value = false
     }
+
+    fun onQueryChange(query: String) {
+        this@MovieListViewModel.query.value = query
+
+    }
+
 }
 

@@ -11,8 +11,8 @@ class MovieRepository_Impl(
     private val mapper: MovieDtoMapper
 ): MovieRepository {
 
-    override suspend fun searchMovies(query: String): List<MovieSearch> {
-        return mapper.toDomainMovieList(service.searchMovies(query = query).results)
+    override suspend fun searchMovies(query: String, page: Int): List<MovieSearch> {
+        return mapper.toDomainMovieList(service.searchMovies(query = query, page = page).results)
     }
 
     override suspend fun getMovie(id: Int): Movie {
