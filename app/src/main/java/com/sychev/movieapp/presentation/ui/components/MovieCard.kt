@@ -61,18 +61,33 @@ fun MovieCard(
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Button(
-                        modifier = Modifier.padding(16.dp),
+                        modifier = Modifier.padding(24.dp),
                         onClick = {},
                         shape = MaterialTheme.shapes.medium,
                     ) {
-                        Text(text = "Watched")
+                        Text(
+                            text = "Watched",
+                            color = MaterialTheme.colors.onPrimary
+                        )
                     }
                     Button(
-                        modifier = Modifier.padding(16.dp),
+                        modifier = Modifier.padding(24.dp),
                         onClick = {},
                         shape = MaterialTheme.shapes.medium,
                     ) {
-                        Text(text = "Watch Later")
+                        Text(
+                            text = "Watch Later",
+                            color = MaterialTheme.colors.onPrimary
+                        )
+                        val heartImage = loadPicture(drawable = R.drawable.empty_heart).value
+                        heartImage?.let {
+                            Image(
+                                modifier = Modifier
+                                    .height(25.dp)
+                                    .padding(start = 8.dp),
+                                bitmap = it.asImageBitmap(),
+                            )
+                        }
                     }
 
                 }

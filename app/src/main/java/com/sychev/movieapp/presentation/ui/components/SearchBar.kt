@@ -1,5 +1,6 @@
 package com.sychev.movieapp.presentation.ui.components
 
+import android.content.SharedPreferences
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -14,13 +15,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import com.sychev.movieapp.presentation.ui.theme.*
 
+@ExperimentalMaterialApi
 @Composable
 fun SearchBar(
     query: String,
+    darkTheme: Boolean,
     onQueryChange: (String) -> Unit,
-    performSearch: () -> Unit
+    performSearch: () -> Unit,
+    changeDarkTheme: () -> Unit,
+    saveDarkThemeToPreferences: () -> Unit,
 ) {
+
     Surface(
         elevation = 8.dp,
         modifier = Modifier
@@ -32,7 +39,7 @@ fun SearchBar(
         Row {
             TextField(
                 modifier = Modifier
-                    .fillMaxWidth(0.9f)
+                    .fillMaxWidth(0.85f)
                     .padding(8.dp),
                 value = query,
                 onValueChange = onQueryChange,
@@ -57,19 +64,31 @@ fun SearchBar(
             ConstraintLayout(
                 modifier = Modifier.align(Alignment.CenterVertically)
             ) {
-                val settings = createRef()
-                IconButton(
-                    onClick = { },
-                    modifier = Modifier.constrainAs(settings){
+                val ref = createRef()
+                Switch(
+                    checked= darkTheme,
+                    modifier = Modifier.constrainAs(ref){
                         top.linkTo(parent.top)
                         bottom.linkTo(parent.bottom)
+                        end.linkTo(parent.end)
+                    },
+                    onCheckedChange = {
+                        changeDarkTheme()
+                        saveDarkThemeToPreferences()
+                    },
+                    colors = object : SwitchColors{
+                        override fun thumbColor(enabled: Boolean, checked: Boolean): Color {
+                            return if (checked) Green800 else Grey1
+                        }
+
+                        override fun trackColor(enabled: Boolean, checked: Boolean): Color {
+                            return if (checked) Green300 else Color.DarkGray
+                        }
                     }
-                ) {
-                    Icon(Icons.Default.Settings)
-                }
+                )
             }
 
-            
+
         }
 
     }

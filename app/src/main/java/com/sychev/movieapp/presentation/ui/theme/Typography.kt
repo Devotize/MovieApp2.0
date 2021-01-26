@@ -1,6 +1,8 @@
 package com.sychev.movieapp.presentation.ui.theme
 
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Typography
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -16,7 +18,6 @@ private val Spartan = fontFamily(
     font(R.font.spartan_bold, FontWeight.W600),
     font(R.font.spartan_extra_bold, FontWeight.W700),
 )
-
 
 val SpartanTypography = Typography(
     h1 = TextStyle(
