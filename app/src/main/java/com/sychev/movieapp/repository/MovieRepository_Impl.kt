@@ -3,7 +3,7 @@ package com.sychev.movieapp.repository
 import com.sychev.movieapp.domain.model.Movie
 import com.sychev.movieapp.domain.model.MovieSearch
 import com.sychev.movieapp.network.MovieApi
-import com.sychev.movieapp.network.model.mapper.MovieDtoMapper
+import com.sychev.movieapp.network.mapper.MovieDtoMapper
 
 
 class MovieRepository_Impl(

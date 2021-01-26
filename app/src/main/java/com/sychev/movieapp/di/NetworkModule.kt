@@ -2,12 +2,10 @@ package com.sychev.movieapp.di
 
 import com.google.gson.GsonBuilder
 import com.sychev.movieapp.network.MovieApi
-import com.sychev.movieapp.network.model.mapper.MovieDtoMapper
-import com.sychev.movieapp.presentation.MainActivity
+import com.sychev.movieapp.network.mapper.MovieDtoMapper
 import com.sychev.movieapp.util.API_KEY
 import com.sychev.movieapp.util.API_LANGUAGE
 import com.sychev.movieapp.util.API_URL
-import dagger.Component
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

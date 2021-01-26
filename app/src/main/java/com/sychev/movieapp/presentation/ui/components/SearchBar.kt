@@ -26,7 +26,7 @@ fun SearchBar(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(8.dp),
+            .padding(end = 8.dp, start = 8.dp, top = 8.dp),
         shape = MaterialTheme.shapes.medium
     ) {
         Row {

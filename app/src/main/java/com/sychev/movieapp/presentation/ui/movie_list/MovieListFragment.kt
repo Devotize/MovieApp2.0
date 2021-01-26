@@ -4,22 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.material.MaterialTheme
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Text
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
+import com.sychev.movieapp.presentation.ui.components.MovieCard
 import com.sychev.movieapp.presentation.ui.components.SearchBar
+import com.sychev.movieapp.presentation.ui.movie_list.MovieListEvent.SearchMoviesEvent
 import com.sychev.movieapp.presentation.ui.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MovieListFragment: Fragment() {
@@ -45,12 +40,18 @@ class MovieListFragment: Fragment() {
                             query = query,
                             onQueryChange = viewModel::onQueryChange,
                             performSearch = {
-                                lifecycleScope.launch {
-                                    viewModel.makeSearch()
-                                }
+                                viewModel.onTriggerEvent(SearchMoviesEvent)
                             }
                         )
-                    Text(text = "$movies")
+                    
+                        LazyColumn(){
+                            itemsIndexed(
+                                items = movies
+                            ){index, item ->  
+                                MovieCard(movie = item)
+                            }
+                        }
+                        
                     }
 
                 }

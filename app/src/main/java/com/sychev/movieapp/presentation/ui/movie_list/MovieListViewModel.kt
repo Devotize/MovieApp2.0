@@ -6,9 +6,8 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sychev.movieapp.domain.model.MovieSearch
+import com.sychev.movieapp.presentation.ui.movie_list.MovieListEvent.SearchMoviesEvent
 import com.sychev.movieapp.repository.MovieRepository
-import com.sychev.movieapp.repository.MovieRepository_Impl
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class MovieListViewModel
@@ -21,7 +20,17 @@ class MovieListViewModel
     val loading = mutableStateOf(false)
     val page = mutableStateOf(1)
 
-    suspend fun makeSearch(){
+    fun onTriggerEvent(event: MovieListEvent){
+        when (event){
+            is SearchMoviesEvent -> {
+                viewModelScope.launch {
+                    makeSearch()
+                }
+            }
+        }
+    }
+
+    private suspend fun makeSearch(){
         loading.value = true
         val result = repository.searchMovies(
                 query = this.query.value,

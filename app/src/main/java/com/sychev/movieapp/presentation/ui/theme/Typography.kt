@@ -70,7 +70,7 @@ val SpartanTypography = Typography(
     ),
     button = TextStyle(
         fontFamily = Spartan,
-        fontWeight = FontWeight.W400,
+        fontWeight = FontWeight.W500,
         fontSize = 15.sp,
         color = Color.White
     ),

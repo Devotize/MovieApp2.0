@@ -1,4 +1,4 @@
-package com.sychev.movieapp.network.model.mapper
+package com.sychev.movieapp.network.mapper
 
 import com.sychev.movieapp.domain.model.Movie
 import com.sychev.movieapp.domain.model.Movie.Collection
