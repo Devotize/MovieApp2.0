@@ -20,4 +20,6 @@ interface MovieRepository {
     suspend fun deleteMovieFromCache(movie: Movie)
 
     suspend fun deleteMovieSearchFromCache(movie: MovieSearch)
+
+    suspend fun deleteById(id: Int)
 }

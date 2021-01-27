@@ -19,6 +19,6 @@ data class MovieSearch(
     val video: Boolean? = null,
     val voteAverage: Float? = null,
     val voteCount:Int? = null,
-    val watchStatus: Boolean? = null,
+    var watchStatus: Boolean? = null,
 ): Parcelable {
 }

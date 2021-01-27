@@ -4,25 +4,31 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Cancel
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.sychev.movieapp.R
 import com.sychev.movieapp.domain.model.MovieSearch
+import com.sychev.movieapp.presentation.ui.theme.*
 import com.sychev.movieapp.util.TAG
 import com.sychev.movieapp.util.loadPicture
 import com.sychev.movieapp.util.loadPictureFromTMDB
 
+@ExperimentalMaterialApi
 @Composable
 fun MovieCard(
-    movie: MovieSearch
+    movie: MovieSearch,
+    addToWatched: () -> Unit,
+    addToWatchLater: () -> Unit,
 ) {
     Card(
         elevation = 8.dp,
@@ -60,25 +66,69 @@ fun MovieCard(
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Button(
-                        modifier = Modifier.padding(24.dp),
-                        onClick = {},
+                        modifier = Modifier
+                            .padding(bottom = 24.dp, top = 24.dp, start = 8.dp, end = 8.dp)
+                            .fillMaxWidth(),
+                        onClick = {
+                            addToWatched()
+                        },
                         shape = MaterialTheme.shapes.medium,
+                        colors = object : ButtonColors{
+                            override fun backgroundColor(enabled: Boolean): Color {
+                                return if (movie.watchStatus == true){
+                                    Grey2
+                                }else {
+                                    Green400
+                                }
+                            }
+
+                            override fun contentColor(enabled: Boolean): Color {
+                                return Black1
+                            }
+                        }
                     ) {
                         Text(
                             text = "Watched",
-                            color = MaterialTheme.colors.onPrimary
+                            color = MaterialTheme.colors.onPrimary,
+                        )
+                        val icon = if (movie.watchStatus == true)
+                            Icons.Default.Close
+                        else
+                            Icons.Default.Done
+                        Icon(
+                            icon,
+                            modifier = Modifier
+                                .padding(start = 4.dp)
                         )
                     }
                     Button(
-                        modifier = Modifier.padding(24.dp),
-                        onClick = {},
+                        modifier = Modifier
+                            .padding(bottom = 24.dp, top = 24.dp, start = 8.dp, end = 8.dp)
+                            .fillMaxWidth(),
+                        onClick = {
+                            addToWatchLater()
+                        },
                         shape = MaterialTheme.shapes.medium,
+                        colors = object : ButtonColors{
+                            override fun backgroundColor(enabled: Boolean): Color {
+                                return if (movie.watchStatus == false){
+                                    Grey2
+                                }else {
+                                    Green400
+                                }
+                            }
+
+                            override fun contentColor(enabled: Boolean): Color {
+                                return Black1
+                            }
+                        }
                     ) {
                         Text(
-                            text = "Watch Later",
+                            text = "Watch",
                             color = MaterialTheme.colors.onPrimary
                         )
-                        val heartImage = loadPicture(drawable = R.drawable.empty_heart).value
+                        val drawable = if (movie.watchStatus == false) R.drawable.filled_heart else R.drawable.empty_heart
+                        val heartImage = loadPicture(drawable = drawable).value
                         heartImage?.let {
                             Image(
                                 modifier = Modifier

@@ -16,13 +16,13 @@ import androidx.fragment.app.viewModels
 import com.sychev.movieapp.presentation.MainActivity
 import com.sychev.movieapp.presentation.ui.components.MovieCard
 import com.sychev.movieapp.presentation.ui.components.SearchBar
-import com.sychev.movieapp.presentation.ui.movie_list.MovieListEvent.SearchMoviesEvent
+import com.sychev.movieapp.presentation.ui.movie_list.MovieListEvent.*
 import com.sychev.movieapp.presentation.ui.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MovieListFragment: Fragment() {
+class MovieListFragment : Fragment() {
 
     private val viewModel: MovieListViewModel by viewModels()
 
@@ -55,22 +55,32 @@ class MovieListFragment: Fragment() {
                             changeDarkTheme = mainAcitivity::switchDarkTheme,
                             saveDarkThemeToPreferences = mainAcitivity::putDarkThemeInPreferences
                         )
-                    
-                        LazyColumn(){
+
+                        LazyColumn() {
                             itemsIndexed(
                                 items = movies
-                            ){index, item ->  
-                                MovieCard(movie = item)
+                            ) { index, item ->
+                                MovieCard(
+                                    movie = item,
+                                    addToWatched = {
+                                        viewModel.onTriggerEvent(AddMovieSearchToWatchedEvent(item))
+                                    },
+                                    addToWatchLater = {
+                                        viewModel.onTriggerEvent(
+                                            AddMovieSearchToWatchLaterEvent(item)
+                                        )
+                                    },
+                                )
                             }
                         }
-                        
                     }
 
                 }
 
             }
+
         }
-            
     }
-    
+
 }
+    

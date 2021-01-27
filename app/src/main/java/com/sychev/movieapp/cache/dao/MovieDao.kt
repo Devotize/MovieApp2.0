@@ -6,16 +6,19 @@ import com.sychev.movieapp.cache.model.MovieEntity
 @Dao
 interface MovieDao {
 
-    @Query("SELECT * FROM movie WHERE watchStatus LIKE :watchStatus")
+    @Query("SELECT * FROM movie WHERE watchStatus = :watchStatus")
     suspend fun getAllMoviesWithStatus(watchStatus: Boolean): List<MovieEntity>
 
-    @Query("SELECT * FROM movie WHERE id LIKE :id")
+    @Query("SELECT * FROM movie WHERE id = :id")
     suspend fun getMovieById(id: Int): MovieEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(movie: MovieEntity)
+    suspend fun insert(movie: MovieEntity)
 
     @Delete
-    fun delete(movie: MovieEntity)
+    suspend fun delete(movie: MovieEntity)
+
+    @Query("DELETE FROM movie WHERE id = :id")
+    suspend fun deleteById(id: Int)
 
 }

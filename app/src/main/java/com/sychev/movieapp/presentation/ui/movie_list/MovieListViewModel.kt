@@ -7,7 +7,7 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sychev.movieapp.domain.model.MovieSearch
-import com.sychev.movieapp.presentation.ui.movie_list.MovieListEvent.SearchMoviesEvent
+import com.sychev.movieapp.presentation.ui.movie_list.MovieListEvent.*
 import com.sychev.movieapp.repository.MovieRepository
 import com.sychev.movieapp.util.TAG
 import kotlinx.coroutines.launch
@@ -18,18 +18,12 @@ class MovieListViewModel
 ) : ViewModel() {
 
     val movies: MutableState<List<MovieSearch>> = mutableStateOf(ArrayList())
-    val query: MutableState<String> = mutableStateOf("")
+    val query: MutableState<String> = mutableStateOf("Transformers")
     val loading = mutableStateOf(false)
     val page = mutableStateOf(1)
 
-
     init {
-        viewModelScope.launch {
-            val movieTest = repository.getMovieFromCache(2)
-            Log.d(TAG, "moveTest: $movieTest")
-            val movieListTest = repository.getMoviesByStatus(false)
-            Log.d(TAG, "movieTestList: $movieListTest")
-        }
+        onTriggerEvent(SearchMoviesEvent)
     }
 
     fun onTriggerEvent(event: MovieListEvent){
@@ -37,6 +31,27 @@ class MovieListViewModel
             is SearchMoviesEvent -> {
                 viewModelScope.launch {
                     makeSearch()
+                }
+            }
+            is AddMovieSearchToWatchedEvent -> {
+                viewModelScope.launch {
+                    if (event.movie.watchStatus == true) {
+                        event.movie.id?.let { deleteMovieById(it) }
+                    } else {
+                        addToWatched(event.movie)
+                    }
+                    updateMovies()
+                }
+
+            }
+            is AddMovieSearchToWatchLaterEvent -> {
+                viewModelScope.launch {
+                    if (event.movie.watchStatus == false) {
+                        event.movie.id?.let{deleteMovieById(it)}
+                    } else {
+                        addToWatchLater(event.movie)
+                    }
+                    updateMovies()
                 }
             }
         }
@@ -48,14 +63,53 @@ class MovieListViewModel
                 query = this.query.value,
                 page = page.value
             )
-
         movies.value = result
         loading.value = false
+        result.forEach { movieSearch ->
+            movieSearch.checkMovieSearchForStatus()
+        }
+        movies.value = result
     }
 
     fun onQueryChange(query: String) {
         this@MovieListViewModel.query.value = query
 
+    }
+
+    private suspend fun MovieSearch.checkMovieSearchForStatus() {
+        this.id?.let{ id ->
+            val movie = repository.getMovieFromCache(id)
+            if (movie != null){
+                this.watchStatus = movie.watchStatus
+            } else {
+                this.watchStatus = null
+            }
+        }
+    }
+
+    private suspend fun addToWatchLater(movie: MovieSearch) {
+        movie.watchStatus = false
+        repository.addMovieSearchToCache(movie = movie)
+    }
+
+    private suspend fun deleteMovieById(id: Int) {
+        repository.deleteById(id)
+    }
+
+    private suspend fun addToWatched(movie: MovieSearch) {
+        movie.watchStatus = true
+        repository.addMovieSearchToCache(movie = movie)
+
+    }
+
+    private suspend fun updateMovies() {
+        val movies = mutableListOf<MovieSearch>()
+        movies.addAll(this.movies.value)
+        movies.forEach {
+            it.checkMovieSearchForStatus()
+        }
+        this.movies.value = listOf()
+        this.movies.value = movies
     }
 
 }

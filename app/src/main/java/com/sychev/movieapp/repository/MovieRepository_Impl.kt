@@ -48,4 +48,8 @@ class MovieRepository_Impl(
         movieDao.delete(mapperEntity.fromDomainMovieSearch(movie))
     }
 
+    override suspend fun deleteById(id: Int) {
+        movieDao.deleteById(id)
+    }
+
 }
