@@ -3,7 +3,7 @@ package com.sychev.movieapp.cache.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity
+@Entity(tableName = "movie")
 data class MovieEntity(
     @PrimaryKey val id: Int,
     val watchStatus: Boolean,

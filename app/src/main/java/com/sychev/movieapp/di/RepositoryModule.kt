@@ -1,5 +1,7 @@
 package com.sychev.movieapp.di
 
+import com.sychev.movieapp.cache.dao.MovieDao
+import com.sychev.movieapp.cache.mapper.MovieEntityMapper
 import com.sychev.movieapp.network.MovieApi
 import com.sychev.movieapp.network.mapper.MovieDtoMapper
 import com.sychev.movieapp.repository.MovieRepository
@@ -18,9 +20,16 @@ object RepositoryModule {
     @Provides
     fun provideMovieRepository(
         service: MovieApi,
-        mapper: MovieDtoMapper
+        mapperDto: MovieDtoMapper,
+        mapperEntity: MovieEntityMapper,
+        movieDao: MovieDao
     ): MovieRepository{
-        return MovieRepository_Impl(service = service, mapper = mapper)
+        return MovieRepository_Impl(
+            service = service,
+            mapperDto = mapperDto,
+            mapperEntity = mapperEntity,
+            movieDao = movieDao
+        )
     }
 
 }

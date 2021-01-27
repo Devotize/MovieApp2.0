@@ -36,7 +36,7 @@ fun MovieCard(
         Column() {
 
             Row() {
-                Log.d(TAG, "MovieCard: move.posterPath = ${movie.posterPath}")
+//                Log.d(TAG, "MovieCard: move.posterPath = ${movie.posterPath}")
                 val image = loadPictureFromTMDB(
                     url = movie.posterPath,
                     defaultImage = R.drawable.default_movie_poster,

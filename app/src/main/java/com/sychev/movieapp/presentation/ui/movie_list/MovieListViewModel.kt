@@ -1,5 +1,6 @@
 package com.sychev.movieapp.presentation.ui.movie_list
 
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.hilt.lifecycle.ViewModelInject
@@ -8,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.sychev.movieapp.domain.model.MovieSearch
 import com.sychev.movieapp.presentation.ui.movie_list.MovieListEvent.SearchMoviesEvent
 import com.sychev.movieapp.repository.MovieRepository
+import com.sychev.movieapp.util.TAG
 import kotlinx.coroutines.launch
 
 class MovieListViewModel
@@ -19,6 +21,16 @@ class MovieListViewModel
     val query: MutableState<String> = mutableStateOf("")
     val loading = mutableStateOf(false)
     val page = mutableStateOf(1)
+
+
+    init {
+        viewModelScope.launch {
+            val movieTest = repository.getMovieFromCache(2)
+            Log.d(TAG, "moveTest: $movieTest")
+            val movieListTest = repository.getMoviesByStatus(false)
+            Log.d(TAG, "movieTestList: $movieListTest")
+        }
+    }
 
     fun onTriggerEvent(event: MovieListEvent){
         when (event){
