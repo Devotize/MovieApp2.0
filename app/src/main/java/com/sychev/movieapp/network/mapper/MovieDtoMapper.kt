@@ -1,7 +1,6 @@
 package com.sychev.movieapp.network.mapper
 
 import com.sychev.movieapp.domain.model.Movie
-import com.sychev.movieapp.domain.model.Movie.Collection
 import com.sychev.movieapp.domain.model.Movie.Genre
 import com.sychev.movieapp.domain.model.MovieSearch
 import com.sychev.movieapp.domain.util.DomainCollectionMapper
@@ -15,7 +14,7 @@ import com.sychev.movieapp.network.model.MovieSearchDto
 class MovieDtoMapper
     : DomainMovieSearchMapper<MovieSearchDto, MovieSearch>,
         DomainMovieMapper<MovieDto, Movie>,
-        DomainCollectionMapper<CollectionDto, Collection>,
+        DomainCollectionMapper<CollectionDto, Movie.Collection>,
         DomainGenreMapper<GenreDto, Genre>
 
 
@@ -59,7 +58,7 @@ class MovieDtoMapper
         )
     }
 
-    override fun toDomainMovie(model: MovieDto): Movie {
+    override fun toDomainMovie(model: MovieDto): Movie{
         return Movie(
             adult = model.adult,
             backdropPath = model.backdropPath,
@@ -111,8 +110,8 @@ class MovieDtoMapper
         )
     }
 
-    override fun toDomainCollection(model: CollectionDto): Collection {
-        return Collection(
+    override fun toDomainCollection(model: CollectionDto): Movie.Collection {
+        return Movie.Collection(
             model.id,
             model.name,
             model.posterPath,
@@ -120,7 +119,7 @@ class MovieDtoMapper
         )
     }
 
-    override fun fromDomainCollection(domainModel: Collection): CollectionDto {
+    override fun fromDomainCollection(domainModel: Movie.Collection): CollectionDto {
         return CollectionDto(
             domainModel.id,
             domainModel.name,
