@@ -1,11 +1,13 @@
 package com.sychev.movieapp.repository
 
+import android.util.Log
 import com.sychev.movieapp.cache.dao.MovieDao
 import com.sychev.movieapp.cache.mapper.MovieEntityMapper
 import com.sychev.movieapp.domain.model.Movie
 import com.sychev.movieapp.domain.model.MovieSearch
 import com.sychev.movieapp.network.MovieApi
 import com.sychev.movieapp.network.mapper.MovieDtoMapper
+import com.sychev.movieapp.util.TAG
 
 
 class MovieRepository_Impl(
@@ -20,7 +22,9 @@ class MovieRepository_Impl(
     }
 
     override suspend fun getMovieFromNetwork(id: Int): Movie {
-        return mapperDto.toDomainMovie(service.getMovie(id).movieDto)
+        Log.d(TAG, "getMovieFromNetwork: movie: ${service.getMovie(id)}")
+        return mapperDto.toDomainMovie(service.getMovie(id))
+
     }
 
     override suspend fun getMoviesByStatus(watchStatus: Boolean): List<MovieSearch> {

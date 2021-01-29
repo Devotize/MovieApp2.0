@@ -1,6 +1,5 @@
 package com.sychev.movieapp.presentation.ui.movie_list
 
-import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.hilt.lifecycle.ViewModelInject
@@ -9,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.sychev.movieapp.domain.model.MovieSearch
 import com.sychev.movieapp.presentation.ui.movie_list.MovieListEvent.*
 import com.sychev.movieapp.repository.MovieRepository
-import com.sychev.movieapp.util.TAG
 import kotlinx.coroutines.launch
 
 class MovieListViewModel
@@ -20,7 +18,8 @@ class MovieListViewModel
     val movies: MutableState<List<MovieSearch>> = mutableStateOf(ArrayList())
     val query: MutableState<String> = mutableStateOf("Transformers")
     val loading = mutableStateOf(false)
-    val page = mutableStateOf(1)
+    private val listScrollPosition = mutableStateOf(0)
+    private val page = mutableStateOf(1)
 
     init {
         onTriggerEvent(SearchMoviesEvent)
@@ -30,6 +29,7 @@ class MovieListViewModel
         when (event){
             is SearchMoviesEvent -> {
                 viewModelScope.launch {
+                    resetSearch()
                     makeSearch()
                 }
             }
@@ -76,6 +76,15 @@ class MovieListViewModel
 
     }
 
+    private fun resetSearch() {
+        movies.value = listOf()
+        listScrollPosition.value = 0
+    }
+
+    fun onChangeScrollPosition(position: Int) {
+        this.listScrollPosition.value = position
+    }
+
     private suspend fun MovieSearch.checkMovieSearchForStatus() {
         this.id?.let{ id ->
             val movie = repository.getMovieFromCache(id)
@@ -111,6 +120,5 @@ class MovieListViewModel
         this.movies.value = listOf()
         this.movies.value = movies
     }
-
 }
 

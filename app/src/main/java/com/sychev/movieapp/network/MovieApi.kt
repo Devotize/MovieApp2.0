@@ -1,5 +1,6 @@
 package com.sychev.movieapp.network
 
+import com.sychev.movieapp.network.model.MovieDto
 import com.sychev.movieapp.network.responses.MovieResponse
 import com.sychev.movieapp.network.responses.MovieSearchResponse
 import retrofit2.http.GET
@@ -14,6 +15,6 @@ interface MovieApi {
         @Query("page") page: Int,
     ): MovieSearchResponse
 
-    @GET("movie/")
-    suspend fun getMovie(@Path("") id: Int): MovieResponse
+    @GET("movie/{id}")
+    suspend fun getMovie(@Path("id", encoded = true) id: Int): MovieDto
 }

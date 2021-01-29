@@ -29,6 +29,7 @@ fun MovieCard(
     movie: MovieSearch,
     addToWatched: () -> Unit,
     addToWatchLater: () -> Unit,
+    onClick:() -> Unit
 ) {
     Card(
         elevation = 8.dp,
@@ -36,7 +37,9 @@ fun MovieCard(
             .fillMaxWidth()
             .wrapContentHeight()
             .padding(8.dp)
-            .clickable(onClick = {}),
+            .clickable(onClick = {
+                onClick()
+            }),
         shape = MaterialTheme.shapes.medium,
     ) {
         Column() {

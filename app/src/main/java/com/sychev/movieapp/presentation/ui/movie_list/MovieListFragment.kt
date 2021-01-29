@@ -1,25 +1,25 @@
 package com.sychev.movieapp.presentation.ui.movie_list
 
-import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Text
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
+import com.sychev.movieapp.R
 import com.sychev.movieapp.presentation.MainActivity
 import com.sychev.movieapp.presentation.ui.components.MovieCard
 import com.sychev.movieapp.presentation.ui.components.SearchBar
 import com.sychev.movieapp.presentation.ui.movie_list.MovieListEvent.*
 import com.sychev.movieapp.presentation.ui.theme.AppTheme
+import com.sychev.movieapp.util.TAG
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MovieListFragment : Fragment() {
@@ -37,14 +37,14 @@ class MovieListFragment : Fragment() {
                 val movies = viewModel.movies.value
                 val query = viewModel.query.value
                 val loading = viewModel.loading.value
-                val mainAcitivity = activity as MainActivity
-                val darkTheme = mainAcitivity.darkTheme.value
+                val mainActivity = activity as MainActivity
+                val darkTheme = mainActivity.darkTheme.value
 
                 AppTheme(
                     darkTheme = darkTheme,
                     loading = loading,
                 ) {
-                    Column() {
+                    Column {
                         SearchBar(
                             query = query,
                             onQueryChange = viewModel::onQueryChange,
@@ -52,14 +52,16 @@ class MovieListFragment : Fragment() {
                             performSearch = {
                                 viewModel.onTriggerEvent(SearchMoviesEvent)
                             },
-                            changeDarkTheme = mainAcitivity::switchDarkTheme,
-                            saveDarkThemeToPreferences = mainAcitivity::putDarkThemeInPreferences
+                            changeDarkTheme = mainActivity::switchDarkTheme,
+                            saveDarkThemeToPreferences = mainActivity::putDarkThemeInPreferences
                         )
-
-                        LazyColumn() {
+                        LazyColumn(
+                        ) {
                             itemsIndexed(
                                 items = movies
                             ) { index, item ->
+                                viewModel.onChangeScrollPosition(index)
+                                Log.d(TAG, "onCreateView: Index: $index")
                                 MovieCard(
                                     movie = item,
                                     addToWatched = {
@@ -70,6 +72,13 @@ class MovieListFragment : Fragment() {
                                             AddMovieSearchToWatchLaterEvent(item)
                                         )
                                     },
+                                    onClick = {
+                                        item.id?.let{
+                                            val bundle = Bundle()
+                                            bundle.putInt("movieId", item.id)
+                                            findNavController().navigate(R.id.action_movieListFragment_to_movieFragment, bundle)
+                                        }
+                                    }
                                 )
                             }
                         }

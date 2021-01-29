@@ -14,7 +14,7 @@ import com.sychev.movieapp.network.model.MovieSearchDto
 class MovieDtoMapper
     : DomainMovieSearchMapper<MovieSearchDto, MovieSearch>,
         DomainMovieMapper<MovieDto, Movie>,
-        DomainCollectionMapper<CollectionDto, Movie.Collection>,
+    DomainCollectionMapper<CollectionDto, Movie.Collection>,
         DomainGenreMapper<GenreDto, Genre>
 
 

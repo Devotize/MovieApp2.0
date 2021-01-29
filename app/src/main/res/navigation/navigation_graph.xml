@@ -7,5 +7,13 @@
     <fragment
         android:id="@+id/movieListFragment"
         android:name="com.sychev.movieapp.presentation.ui.movie_list.MovieListFragment"
-        android:label="MovieListFragment" />
+        android:label="MovieListFragment" >
+        <action
+            android:id="@+id/action_movieListFragment_to_movieFragment"
+            app:destination="@id/movieFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/movieFragment"
+        android:name="com.sychev.movieapp.presentation.ui.movie.MovieFragment"
+        android:label="MovieFragment" />
 </navigation>
