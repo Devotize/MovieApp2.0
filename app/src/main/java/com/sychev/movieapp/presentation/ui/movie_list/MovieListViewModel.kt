@@ -44,12 +44,12 @@ class MovieListViewModel
                 }
 
             }
-            is AddMovieSearchToWatchLaterEvent -> {
+            is AddMovieSearchToWatchlistEvent -> {
                 viewModelScope.launch {
                     if (event.movie.watchStatus == false) {
                         event.movie.id?.let{deleteMovieById(it)}
                     } else {
-                        addToWatchLater(event.movie)
+                        addToWatchList(event.movie)
                     }
                     updateMovies()
                 }
@@ -96,7 +96,7 @@ class MovieListViewModel
         }
     }
 
-    private suspend fun addToWatchLater(movie: MovieSearch) {
+    private suspend fun addToWatchList(movie: MovieSearch) {
         movie.watchStatus = false
         repository.addMovieSearchToCache(movie = movie)
     }

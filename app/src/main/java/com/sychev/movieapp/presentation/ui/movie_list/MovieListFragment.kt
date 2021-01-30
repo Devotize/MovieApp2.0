@@ -67,9 +67,9 @@ class MovieListFragment : Fragment() {
                                     addToWatched = {
                                         viewModel.onTriggerEvent(AddMovieSearchToWatchedEvent(item))
                                     },
-                                    addToWatchLater = {
+                                    addToWatchList = {
                                         viewModel.onTriggerEvent(
-                                            AddMovieSearchToWatchLaterEvent(item)
+                                            AddMovieSearchToWatchlistEvent(item)
                                         )
                                     },
                                     onClick = {

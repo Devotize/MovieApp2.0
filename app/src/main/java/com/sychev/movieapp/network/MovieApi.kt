@@ -1,6 +1,7 @@
 package com.sychev.movieapp.network
 
 import com.sychev.movieapp.network.model.MovieDto
+import com.sychev.movieapp.network.responses.CreditsResponse
 import com.sychev.movieapp.network.responses.MovieResponse
 import com.sychev.movieapp.network.responses.MovieSearchResponse
 import retrofit2.http.GET
@@ -17,4 +18,7 @@ interface MovieApi {
 
     @GET("movie/{id}")
     suspend fun getMovie(@Path("id", encoded = true) id: Int): MovieDto
+
+    @GET("movie/{movie_id}/credits")
+    suspend fun getCredits(@Path("movie_id", encoded = true) id: Int): CreditsResponse
 }

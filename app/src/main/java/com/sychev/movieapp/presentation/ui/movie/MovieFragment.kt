@@ -6,7 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
@@ -15,6 +18,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.sychev.movieapp.R
 import com.sychev.movieapp.presentation.MainActivity
+import com.sychev.movieapp.presentation.ui.components.DetailMovieDescription
 import com.sychev.movieapp.presentation.ui.theme.AppTheme
 import com.sychev.movieapp.util.TAG
 import com.sychev.movieapp.util.loadPicture
@@ -45,6 +49,7 @@ class MovieFragment: Fragment() {
                 Log.d(TAG, "onCreateView: Movie = $movie")
                 val loading = viewModel.loading.value
                 val darkTheme = (activity as MainActivity).darkTheme.value
+                val credits = viewModel.credits.value
 
                 AppTheme(
                     darkTheme = darkTheme,
@@ -59,8 +64,15 @@ class MovieFragment: Fragment() {
                         drawable?.let {
                             Image(
                                 bitmap = it.asImageBitmap(),
-                                modifier = Modifier.fillMaxSize(),
+                                modifier = Modifier
+                                    .fillMaxSize(),
                                 contentScale = ContentScale.FillBounds
+                            )
+                        }
+                        if (credits != null) {
+                            DetailMovieDescription(
+                                movie = movie,
+                                credits = credits
                             )
                         }
                     }

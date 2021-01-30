@@ -58,7 +58,7 @@ val SpartanTypography = Typography(
     subtitle2 = TextStyle(
         fontFamily = Spartan,
         fontWeight = FontWeight.W400,
-        fontSize = 14.sp
+        fontSize = 14.sp,
     ),
     body1 = TextStyle(
         fontFamily = Spartan,

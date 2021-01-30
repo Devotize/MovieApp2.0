@@ -1,7 +1,9 @@
 package com.sychev.movieapp.repository
 
+import com.sychev.movieapp.domain.model.Credits
 import com.sychev.movieapp.domain.model.Movie
 import com.sychev.movieapp.domain.model.MovieSearch
+import com.sychev.movieapp.domain.model.Person
 
 interface MovieRepository {
 
@@ -22,4 +24,6 @@ interface MovieRepository {
     suspend fun deleteMovieSearchFromCache(movie: MovieSearch)
 
     suspend fun deleteById(id: Int)
+
+    suspend fun getCredits(id: Int): Credits
 }
