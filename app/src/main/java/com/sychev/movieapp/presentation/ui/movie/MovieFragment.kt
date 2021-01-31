@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -19,6 +20,8 @@ import androidx.fragment.app.viewModels
 import com.sychev.movieapp.R
 import com.sychev.movieapp.presentation.MainActivity
 import com.sychev.movieapp.presentation.ui.components.DetailMovieDescription
+import com.sychev.movieapp.presentation.ui.movie.MovieEvent.AddMovieToWatchedEvent
+import com.sychev.movieapp.presentation.ui.movie.MovieEvent.AddMovieToWatchlistEvent
 import com.sychev.movieapp.presentation.ui.theme.AppTheme
 import com.sychev.movieapp.util.TAG
 import com.sychev.movieapp.util.loadPicture
@@ -38,6 +41,7 @@ class MovieFragment: Fragment() {
 
     }
 
+    @ExperimentalMaterialApi
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -72,7 +76,13 @@ class MovieFragment: Fragment() {
                         if (credits != null) {
                             DetailMovieDescription(
                                 movie = movie,
-                                credits = credits
+                                credits = credits,
+                                addToWatched = {
+                                    viewModel.onTriggerEvent(AddMovieToWatchedEvent(movie))
+                                },
+                                addToWatchlist = {
+                                    viewModel.onTriggerEvent(AddMovieToWatchlistEvent(movie))
+                                },
                             )
                         }
                     }

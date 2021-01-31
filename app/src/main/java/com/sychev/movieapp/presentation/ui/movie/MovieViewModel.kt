@@ -8,8 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sychev.movieapp.domain.model.Credits
 import com.sychev.movieapp.domain.model.Movie
-import com.sychev.movieapp.domain.model.Person
-import com.sychev.movieapp.presentation.ui.movie.MovieEvent.GetMovieEvent
+import com.sychev.movieapp.presentation.ui.movie.MovieEvent.*
 import com.sychev.movieapp.repository.MovieRepository
 import com.sychev.movieapp.util.TAG
 import kotlinx.coroutines.launch
@@ -29,6 +28,26 @@ class MovieViewModel
                 viewModelScope.launch {
                     getMovie(event.movieId)
                     getCredits(event.movieId)
+                }
+            }
+            is AddMovieToWatchedEvent -> {
+                viewModelScope.launch {
+                    if (event.movie.watchStatus == true) {
+                        event.movie.id?.let { deleteMovieById(it) }
+                    } else {
+                        addToWatched(event.movie)
+                    }
+                    updateMovieWatchStatus()
+                }
+            }
+            is AddMovieToWatchlistEvent -> {
+                viewModelScope.launch {
+                    if (event.movie.watchStatus == false) {
+                        event.movie.id?.let{deleteMovieById(it)}
+                    } else {
+                        addToWatchList(event.movie)
+                    }
+                    updateMovieWatchStatus()
                 }
             }
         }
@@ -61,6 +80,27 @@ class MovieViewModel
                 this.watchStatus = null
             }
         }
+    }
+
+    private suspend fun deleteMovieById(id: Int) {
+        repository.deleteById(id)
+    }
+
+    private suspend fun addToWatched(movie: Movie) {
+        movie.watchStatus = true
+        repository.addMovieToCache(movie)
+    }
+
+    private suspend fun addToWatchList(movie: Movie) {
+        movie.watchStatus = false
+        repository.addMovieToCache(movie)
+    }
+
+    private suspend fun updateMovieWatchStatus() {
+        val movie = movie.value
+        movie?.checkMovieSearchForStatus()
+        this.movie.value = null
+        this.movie.value = movie
     }
 
 }

@@ -64,6 +64,11 @@ class MovieListViewModel
                     getWatchedMovies()
                 }
             }
+            is UpdateMovies -> {
+                viewModelScope.launch {
+                    updateMovies()
+                }
+            }
         }
     }
 

@@ -20,7 +20,7 @@ import com.sychev.movieapp.presentation.ui.theme.Grey2
 @Composable
 fun AddToWatchedButton(
     modifier: Modifier,
-    movie: MovieSearch,
+    watchStatus: Boolean?,
     onClick: () -> Unit
 ) {
     Button(
@@ -31,7 +31,7 @@ fun AddToWatchedButton(
         shape = MaterialTheme.shapes.medium,
         colors = object : ButtonColors {
             override fun backgroundColor(enabled: Boolean): Color {
-                return if (movie.watchStatus == true){
+                return if (watchStatus == true){
                     Grey2
                 }else {
                     Green400
@@ -47,7 +47,7 @@ fun AddToWatchedButton(
             text = "Watched",
             color = MaterialTheme.colors.onPrimary,
         )
-        val icon = if (movie.watchStatus == true)
+        val icon = if (watchStatus == true)
             Icons.Default.Close
         else
             Icons.Default.Done

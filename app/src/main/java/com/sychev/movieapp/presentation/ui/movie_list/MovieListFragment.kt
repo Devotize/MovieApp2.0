@@ -31,12 +31,15 @@ class MovieListFragment : Fragment() {
 
     private val viewModel: MovieListViewModel by viewModels()
 
+
+
     @ExperimentalMaterialApi
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        viewModel.onTriggerEvent(UpdateMovies)
         return ComposeView(requireContext()).apply {
             setContent {
                 val movies = viewModel.movies.value

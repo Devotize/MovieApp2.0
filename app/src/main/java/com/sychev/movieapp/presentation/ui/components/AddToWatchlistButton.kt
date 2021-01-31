@@ -21,7 +21,7 @@ import com.sychev.movieapp.util.loadPicture
 @Composable
 fun AddToWatchlistButton(
     modifier: Modifier,
-    movie: MovieSearch,
+    watchStatus: Boolean?,
     onClick: () -> Unit
 ) {
     Button(
@@ -32,7 +32,7 @@ fun AddToWatchlistButton(
         shape = MaterialTheme.shapes.medium,
         colors = object : ButtonColors {
             override fun backgroundColor(enabled: Boolean): Color {
-                return if (movie.watchStatus == false){
+                return if (watchStatus == false){
                     Grey2
                 }else {
                     Green400
@@ -48,7 +48,7 @@ fun AddToWatchlistButton(
             text = "Watchlist",
             color = MaterialTheme.colors.onPrimary
         )
-        val drawable = if (movie.watchStatus == false) R.drawable.filled_heart else R.drawable.empty_heart
+        val drawable = if (watchStatus == false) R.drawable.filled_heart else R.drawable.empty_heart
         val heartImage = loadPicture(drawable = drawable).value
         heartImage?.let {
             Image(

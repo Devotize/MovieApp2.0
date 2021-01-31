@@ -12,4 +12,6 @@ sealed class MovieListEvent {
     object WatchlistMoviesEvent : MovieListEvent()
 
     object WatchedMoviesEvent : MovieListEvent()
+
+    object UpdateMovies: MovieListEvent()
 }

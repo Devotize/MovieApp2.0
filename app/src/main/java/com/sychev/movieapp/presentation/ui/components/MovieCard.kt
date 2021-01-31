@@ -63,14 +63,14 @@ fun MovieCard(
                         modifier = Modifier
                             .padding(bottom = 24.dp, top = 24.dp, start = 8.dp, end = 8.dp)
                             .fillMaxWidth(),
-                        movie = movie,
+                       watchStatus = movie.watchStatus,
                         onClick = addToWatched
                     )
 
                     AddToWatchlistButton(modifier = Modifier
                         .padding(bottom = 24.dp, top = 24.dp, start = 8.dp, end = 8.dp)
                         .fillMaxWidth(),
-                        movie = movie,
+                        watchStatus = movie.watchStatus,
                         onClick = addToWatchList
                     )
 
