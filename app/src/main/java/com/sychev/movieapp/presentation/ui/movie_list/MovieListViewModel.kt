@@ -54,6 +54,16 @@ class MovieListViewModel
                     updateMovies()
                 }
             }
+            is WatchlistMoviesEvent -> {
+                viewModelScope.launch {
+                    getWatchlistMovies()
+                }
+            }
+            is WatchedMoviesEvent -> {
+                viewModelScope.launch {
+                    getWatchedMovies()
+                }
+            }
         }
     }
 
@@ -73,7 +83,18 @@ class MovieListViewModel
 
     fun onQueryChange(query: String) {
         this@MovieListViewModel.query.value = query
+    }
 
+    private suspend fun getWatchedMovies() {
+        loading.value = true
+        movies.value = repository.getMoviesByStatus(true)
+        loading.value = false
+    }
+
+    private suspend fun getWatchlistMovies() {
+        loading.value = true
+        movies.value = repository.getMoviesByStatus(false)
+        loading.value = false
     }
 
     private fun resetSearch() {

@@ -8,4 +8,8 @@ sealed class MovieListEvent {
     class AddMovieSearchToWatchedEvent(val movie: MovieSearch) : MovieListEvent()
 
     class AddMovieSearchToWatchlistEvent(val movie: MovieSearch) : MovieListEvent()
+
+    object WatchlistMoviesEvent : MovieListEvent()
+
+    object WatchedMoviesEvent : MovieListEvent()
 }
