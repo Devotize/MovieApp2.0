@@ -47,6 +47,7 @@ class MovieListFragment : Fragment() {
                 val loading = viewModel.loading.value
                 val mainActivity = activity as MainActivity
                 val darkTheme = mainActivity.darkTheme.value
+                val page = viewModel.page.value
 
                 AppTheme(
                     darkTheme = darkTheme,
@@ -85,6 +86,9 @@ class MovieListFragment : Fragment() {
                                     items = movies
                                 ) { index, item ->
                                     viewModel.onChangeScrollPosition(index)
+                                    if (index + 1 >= page * 20 && !loading) {
+                                        viewModel.onTriggerEvent(NextPageEvent)
+                                    }
                                     Log.d(TAG, "onCreateView: Index: $index")
                                     MovieCard(
                                         movie = item,

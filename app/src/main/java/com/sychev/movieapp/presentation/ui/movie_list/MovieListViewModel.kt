@@ -1,13 +1,16 @@
 package com.sychev.movieapp.presentation.ui.movie_list
 
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sychev.movieapp.domain.model.MovieSearch
+import com.sychev.movieapp.presentation.ui.movie_list.ListType.*
 import com.sychev.movieapp.presentation.ui.movie_list.MovieListEvent.*
 import com.sychev.movieapp.repository.MovieRepository
+import com.sychev.movieapp.util.TAG
 import kotlinx.coroutines.launch
 
 class MovieListViewModel
@@ -18,8 +21,9 @@ class MovieListViewModel
     val movies: MutableState<List<MovieSearch>> = mutableStateOf(ArrayList())
     val query: MutableState<String> = mutableStateOf("Transformers")
     val loading = mutableStateOf(false)
+    private val currentListType: MutableState<ListType> = mutableStateOf(SEARCH_LIST)
     private val listScrollPosition = mutableStateOf(0)
-    private val page = mutableStateOf(1)
+    val page = mutableStateOf(1)
 
     init {
         onTriggerEvent(SearchMoviesEvent)
@@ -29,6 +33,7 @@ class MovieListViewModel
         when (event){
             is SearchMoviesEvent -> {
                 viewModelScope.launch {
+                    currentListType.value = SEARCH_LIST
                     resetSearch()
                     makeSearch()
                 }
@@ -57,16 +62,23 @@ class MovieListViewModel
             is WatchlistMoviesEvent -> {
                 viewModelScope.launch {
                     getWatchlistMovies()
+                    currentListType.value = WATCH_LIST
                 }
             }
             is WatchedMoviesEvent -> {
                 viewModelScope.launch {
                     getWatchedMovies()
+                    currentListType.value = WATCHED_LIST
                 }
             }
             is UpdateMovies -> {
                 viewModelScope.launch {
                     updateMovies()
+                }
+            }
+            is NextPageEvent -> {
+                viewModelScope.launch {
+                    nexPage()
                 }
             }
         }
@@ -90,6 +102,28 @@ class MovieListViewModel
         this@MovieListViewModel.query.value = query
     }
 
+    private suspend fun nexPage() {
+        if (this.listScrollPosition.value + 1 == (20 * page.value) && currentListType.value == SEARCH_LIST) {
+            loading.value = true
+            page.value = page.value + 1
+            val newMovies = movies.value.toMutableList()
+            val result = repository.searchMovies(
+                query = query.value,
+                page = page.value
+            )
+            result.forEach {
+                it.checkMovieSearchForStatus()
+            }
+            newMovies.addAll(result)
+            Log.d(TAG, "nexPage triggeres: newMovies: $newMovies")
+            movies.value = listOf()
+            movies.value = newMovies
+            loading.value = false
+        }
+
+
+    }
+
     private suspend fun getWatchedMovies() {
         loading.value = true
         movies.value = repository.getMoviesByStatus(true)
@@ -104,11 +138,13 @@ class MovieListViewModel
 
     private fun resetSearch() {
         movies.value = listOf()
+        page.value = 1
         listScrollPosition.value = 0
     }
 
     fun onChangeScrollPosition(position: Int) {
         this.listScrollPosition.value = position
+
     }
 
     private suspend fun MovieSearch.checkMovieSearchForStatus() {
