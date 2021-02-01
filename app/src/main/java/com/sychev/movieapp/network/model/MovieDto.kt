@@ -52,7 +52,7 @@ data class MovieDto(
     @SerializedName("vote_average")
     val voteAverage: Float? = null,
     @SerializedName("vote_count")
-    val voteCount: Float? = null
+    val voteCount: Int? = null
 ) {
     data class CollectionDto(
         @SerializedName("id")

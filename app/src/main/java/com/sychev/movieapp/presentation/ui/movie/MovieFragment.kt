@@ -17,6 +17,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import com.sychev.movieapp.R
 import com.sychev.movieapp.presentation.MainActivity
 import com.sychev.movieapp.presentation.ui.components.DetailMovieDescription
@@ -54,6 +55,7 @@ class MovieFragment: Fragment() {
                 val loading = viewModel.loading.value
                 val darkTheme = (activity as MainActivity).darkTheme.value
                 val credits = viewModel.credits.value
+                val recommendations = viewModel.recommendations.value
 
                 AppTheme(
                     darkTheme = darkTheme,
@@ -77,12 +79,17 @@ class MovieFragment: Fragment() {
                             DetailMovieDescription(
                                 movie = movie,
                                 credits = credits,
+                                navController = findNavController(),
+                                recommendations = recommendations,
                                 addToWatched = {
-                                    viewModel.onTriggerEvent(AddMovieToWatchedEvent(movie))
+                                    viewModel.onTriggerEvent(AddMovieToWatchedEvent(it))
                                 },
                                 addToWatchlist = {
-                                    viewModel.onTriggerEvent(AddMovieToWatchlistEvent(movie))
+                                    viewModel.onTriggerEvent(AddMovieToWatchlistEvent(it))
                                 },
+                                onRecommendationClick = {
+                                    viewModel.onTriggerEvent(MovieEvent.GetMovieEvent(it))
+                                }
                             )
                         }
                     }

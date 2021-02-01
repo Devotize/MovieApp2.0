@@ -15,18 +15,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.sychev.movieapp.domain.model.Credits
 import com.sychev.movieapp.domain.model.Movie
+import com.sychev.movieapp.domain.model.MovieSearch
 import com.sychev.movieapp.util.TAG
 import com.sychev.movieapp.util.getMonthByNumber
+import com.sychev.movieapp.util.toMovie
 
 @ExperimentalMaterialApi
 @Composable
 fun DetailMovieDescription(
     movie: Movie,
     credits: Credits,
-    addToWatched: () -> Unit,
-    addToWatchlist: () -> Unit,
+    recommendations: List<MovieSearch>?,
+    navController: NavController,
+    addToWatched: (Movie) -> Unit,
+    addToWatchlist: (Movie) -> Unit,
+    onRecommendationClick: (Int) -> Unit
 ) {
 
     val showPoster = remember { mutableStateOf(false) }
@@ -307,9 +313,41 @@ fun DetailMovieDescription(
                                 )
                             }
                         }
-
-
                     }
+                    recommendations?.let{ list ->
+                        Surface(
+                            modifier = Modifier
+                                .padding(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp),
+                            shape = RoundedCornerShape(16.dp),
+                            elevation = 16.dp
+                        ) {
+                            Text(
+                                modifier = Modifier
+                                    .padding(8.dp),
+                                text = "Recommendations:",
+                                style = MaterialTheme.typography.subtitle1
+                            )
+                        }
+                        LazyRow(
+                            modifier = Modifier.padding(bottom = 4.dp)
+                        ) {
+                            itemsIndexed(list) { index, item ->
+                                MovieCard(
+                                    movie = item,
+                                    addToWatched = {
+                                        addToWatched(item.toMovie())
+                                                   },
+                                    addToWatchList = {
+                                        addToWatchlist(item.toMovie())
+                                                     },
+                                    onClick = {
+                                        movie.id?.let { onRecommendationClick(it) }
+                                    }
+                                )
+                            }
+                        }
+                    }
+
                 }
                 Row(
                     modifier = Modifier
@@ -323,14 +361,14 @@ fun DetailMovieDescription(
                             .padding(top = 16.dp, bottom = 16.dp, end = 16.dp, start = 4.dp),
                         watchStatus = movie.watchStatus,
                         onClick = {
-                            addToWatched()
+                            addToWatched(movie)
                         })
                     AddToWatchlistButton(
                         modifier = Modifier
                             .padding(top = 16.dp, start = 16.dp, end = 4.dp, bottom = 16.dp),
                         watchStatus = movie.watchStatus,
                         onClick = {
-                            addToWatchlist()
+                            addToWatchlist(movie)
                         })
                 }
             }

@@ -24,7 +24,7 @@ data class Movie(
     val tagline: String? = null,
     val title: String? = null,
     val voteAverage: Float? = null,
-    val voteCount: Float? = null,
+    val voteCount: Int? = null,
     var watchStatus: Boolean? = null,
 ): Parcelable {
     @Parcelize

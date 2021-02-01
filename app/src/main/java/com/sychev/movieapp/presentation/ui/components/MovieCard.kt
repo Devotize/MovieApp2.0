@@ -18,8 +18,8 @@ import com.sychev.movieapp.util.loadPictureFromTMDB
 @Composable
 fun MovieCard(
     movie: MovieSearch,
-    addToWatched: () -> Unit,
-    addToWatchList: () -> Unit,
+    addToWatched: (MovieSearch) -> Unit,
+    addToWatchList: (MovieSearch) -> Unit,
     onClick:() -> Unit
 ) {
     Card(
@@ -64,24 +64,27 @@ fun MovieCard(
                             .padding(bottom = 24.dp, top = 24.dp, start = 8.dp, end = 8.dp)
                             .fillMaxWidth(),
                        watchStatus = movie.watchStatus,
-                        onClick = addToWatched
+                        onClick = {addToWatched(movie)}
                     )
 
                     AddToWatchlistButton(modifier = Modifier
                         .padding(bottom = 24.dp, top = 24.dp, start = 8.dp, end = 8.dp)
                         .fillMaxWidth(),
                         watchStatus = movie.watchStatus,
-                        onClick = addToWatchList
+                        onClick = {addToWatchList(movie)}
                     )
 
                 }
             }
 
-            Row() {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
                 movie.title?.let {
                     Text(
                         modifier = Modifier
-                            .fillMaxWidth(0.80f)
+                            .preferredWidth(280.dp)
                             .padding(8.dp),
                         text = it,
                         style = MaterialTheme.typography.h3

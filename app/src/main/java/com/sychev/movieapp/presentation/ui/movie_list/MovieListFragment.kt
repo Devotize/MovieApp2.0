@@ -93,11 +93,11 @@ class MovieListFragment : Fragment() {
                                     MovieCard(
                                         movie = item,
                                         addToWatched = {
-                                            viewModel.onTriggerEvent(AddMovieSearchToWatchedEvent(item))
+                                            viewModel.onTriggerEvent(AddMovieSearchToWatchedEvent(it))
                                         },
                                         addToWatchList = {
                                             viewModel.onTriggerEvent(
-                                                AddMovieSearchToWatchlistEvent(item)
+                                                AddMovieSearchToWatchlistEvent(it)
                                             )
                                         },
                                         onClick = {

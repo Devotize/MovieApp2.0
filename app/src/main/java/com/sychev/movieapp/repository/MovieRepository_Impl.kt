@@ -61,4 +61,8 @@ class MovieRepository_Impl(
         return mapperDto.toDomainCredits(service.getCredits(id))
     }
 
+    override suspend fun getRecommendations(id: Int): List<MovieSearch>? {
+        return mapperDto.toDomainMovieList(service.getRecommendations(id).results)
+    }
+
 }

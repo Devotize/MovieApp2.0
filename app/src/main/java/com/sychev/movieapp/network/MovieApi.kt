@@ -21,4 +21,7 @@ interface MovieApi {
 
     @GET("movie/{movie_id}/credits")
     suspend fun getCredits(@Path("movie_id", encoded = true) id: Int): CreditsResponse
+
+    @GET("movie/{movie_id}/recommendations")
+    suspend fun getRecommendations(@Path("movie_id", encoded = true) id: Int): MovieSearchResponse
 }

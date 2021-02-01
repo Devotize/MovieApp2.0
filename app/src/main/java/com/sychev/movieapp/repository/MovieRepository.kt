@@ -26,4 +26,6 @@ interface MovieRepository {
     suspend fun deleteById(id: Int)
 
     suspend fun getCredits(id: Int): Credits
+
+    suspend fun getRecommendations(id: Int): List<MovieSearch>?
 }
