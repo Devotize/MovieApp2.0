@@ -28,9 +28,8 @@ fun PersonCard(
 ){
     Card(
         modifier = modifier
-            .clickable(onClick = {
-
-            }),
+            .clickable(onClick = onClick
+            ),
         elevation = 16.dp,
         shape = MaterialTheme.shapes.medium
     ) {

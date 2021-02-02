@@ -6,7 +6,7 @@ data class Person(
     val deathDay: String? = null,
     val gender: Int? = null,  //2-is male, 1-is female
     val id: Int? = null,
-    val imdbId: Int? = null,
+    val imdbId: String? = null,
     val knownForDepartment: String? = null,
     val name: String? = null,
     val placeOfBirth: String? = null,

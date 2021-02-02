@@ -41,7 +41,7 @@ interface DomainGenreMapper<GenreDto, Genre> {
     fun fromDomainGenreList(domainList: List<Genre>): List<GenreDto>
 }
 
-interface DomainPersonMapper<CastDto, CrewDto, DomainModel> {
+interface DomainPersonCastMapper<CastDto, CrewDto, DomainModel> {
 
     fun toDomainPersonFromCastDto(model: CastDto): DomainModel
 
@@ -56,6 +56,12 @@ interface DomainCreditsMapper<S, DomainModel> {
     fun toDomainCredits(model: S): DomainModel
 
     fun fromDomainCredits(domainModel: DomainModel): S
+}
+
+interface DomainPersonMapper<T, DomainModel> {
+    fun toDomainPerson(model: T): DomainModel
+
+    fun fromDomainPerson(domainModel: DomainModel): T
 }
 
 

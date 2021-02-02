@@ -3,9 +3,7 @@ package com.sychev.movieapp.repository
 import android.util.Log
 import com.sychev.movieapp.cache.dao.MovieDao
 import com.sychev.movieapp.cache.mapper.MovieEntityMapper
-import com.sychev.movieapp.domain.model.Credits
-import com.sychev.movieapp.domain.model.Movie
-import com.sychev.movieapp.domain.model.MovieSearch
+import com.sychev.movieapp.domain.model.*
 import com.sychev.movieapp.network.MovieApi
 import com.sychev.movieapp.network.mapper.MovieDtoMapper
 import com.sychev.movieapp.util.TAG
@@ -57,12 +55,20 @@ class MovieRepository_Impl(
         movieDao.deleteById(id)
     }
 
-    override suspend fun getCredits(id: Int): Credits {
+    override suspend fun getCredits(id: Int): MovieCredits {
         return mapperDto.toDomainCredits(service.getCredits(id))
     }
 
     override suspend fun getRecommendations(id: Int): List<MovieSearch>? {
         return mapperDto.toDomainMovieList(service.getRecommendations(id).results)
+    }
+
+    override suspend fun getPerson(id: Int): Person? {
+        return service.getPerson(id)?.let { mapperDto.toDomainPerson(it) }
+    }
+
+    override suspend fun getPersonMovieCredits(id: Int): PersonMovieCredits {
+        return mapperDto.toPersonMovieCredits(service.getPersonMovieCredits(id))
     }
 
 }

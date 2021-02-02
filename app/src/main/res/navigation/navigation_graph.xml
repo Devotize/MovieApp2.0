@@ -15,5 +15,13 @@
     <fragment
         android:id="@+id/movieFragment"
         android:name="com.sychev.movieapp.presentation.ui.movie.MovieFragment"
-        android:label="MovieFragment" />
+        android:label="MovieFragment" >
+        <action
+            android:id="@+id/action_movieFragment_to_personFragment"
+            app:destination="@id/personFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/personFragment"
+        android:name="com.sychev.movieapp.presentation.ui.person.PersonFragment"
+        android:label="PersonFragment" />
 </navigation>

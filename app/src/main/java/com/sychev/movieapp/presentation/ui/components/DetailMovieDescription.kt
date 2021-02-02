@@ -1,5 +1,6 @@
 package com.sychev.movieapp.presentation.ui.components
 
+import android.os.Bundle
 import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -16,7 +17,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.sychev.movieapp.domain.model.Credits
+import com.sychev.movieapp.R
+import com.sychev.movieapp.domain.model.MovieCredits
 import com.sychev.movieapp.domain.model.Movie
 import com.sychev.movieapp.domain.model.MovieSearch
 import com.sychev.movieapp.util.TAG
@@ -27,7 +29,7 @@ import com.sychev.movieapp.util.toMovie
 @Composable
 fun DetailMovieDescription(
     movie: Movie,
-    credits: Credits,
+    credits: MovieCredits,
     recommendations: List<MovieSearch>?,
     navController: NavController,
     addToWatched: (Movie) -> Unit,
@@ -277,7 +279,13 @@ fun DetailMovieDescription(
                                         top = 4.dp,
                                         bottom = 4.dp
                                     ),
-                                    onClick = {}
+                                    onClick = {
+                                        person.id?.let { id ->
+                                            val bundle = Bundle()
+                                            bundle.putInt("person_id", id)
+                                            navController.navigate(R.id.action_movieFragment_to_personFragment, bundle)
+                                        }
+                                    }
                                 )
                             }
                         }
@@ -309,7 +317,13 @@ fun DetailMovieDescription(
                                         top = 4.dp,
                                         bottom = 4.dp
                                     ),
-                                    onClick = {}
+                                    onClick = {
+                                        person.id?.let { id ->
+                                            val bundle = Bundle()
+                                            bundle.putInt("person_id", id)
+                                            navController.navigate(R.id.action_movieFragment_to_personFragment, bundle)
+                                        }
+                                    }
                                 )
                             }
                         }
@@ -341,7 +355,7 @@ fun DetailMovieDescription(
                                         addToWatchlist(item.toMovie())
                                                      },
                                     onClick = {
-                                        movie.id?.let { onRecommendationClick(it) }
+                                        item.id?.let { onRecommendationClick(it) }
                                     }
                                 )
                             }

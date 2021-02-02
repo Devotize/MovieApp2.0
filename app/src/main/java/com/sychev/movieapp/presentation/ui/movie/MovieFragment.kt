@@ -21,8 +21,7 @@ import androidx.navigation.findNavController
 import com.sychev.movieapp.R
 import com.sychev.movieapp.presentation.MainActivity
 import com.sychev.movieapp.presentation.ui.components.DetailMovieDescription
-import com.sychev.movieapp.presentation.ui.movie.MovieEvent.AddMovieToWatchedEvent
-import com.sychev.movieapp.presentation.ui.movie.MovieEvent.AddMovieToWatchlistEvent
+import com.sychev.movieapp.presentation.ui.movie.MovieEvent.*
 import com.sychev.movieapp.presentation.ui.theme.AppTheme
 import com.sychev.movieapp.util.TAG
 import com.sychev.movieapp.util.loadPicture
@@ -37,7 +36,7 @@ class MovieFragment: Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.getInt("movieId")?.let{ id ->
-                viewModel.onTriggerEvent(MovieEvent.GetMovieEvent(id))
+                viewModel.onTriggerEvent(GetMovieEvent(id))
             }
 
     }
@@ -88,7 +87,7 @@ class MovieFragment: Fragment() {
                                     viewModel.onTriggerEvent(AddMovieToWatchlistEvent(it))
                                 },
                                 onRecommendationClick = {
-                                    viewModel.onTriggerEvent(MovieEvent.GetMovieEvent(it))
+                                    viewModel.onTriggerEvent(GetMovieEvent(it))
                                 }
                             )
                         }

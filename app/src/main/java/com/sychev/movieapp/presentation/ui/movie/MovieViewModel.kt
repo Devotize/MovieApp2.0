@@ -6,13 +6,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sychev.movieapp.domain.model.Credits
+import com.sychev.movieapp.domain.model.MovieCredits
 import com.sychev.movieapp.domain.model.Movie
 import com.sychev.movieapp.domain.model.MovieSearch
 import com.sychev.movieapp.presentation.ui.movie.MovieEvent.*
 import com.sychev.movieapp.repository.MovieRepository
 import com.sychev.movieapp.util.TAG
-import com.sychev.movieapp.util.toMovieSearch
 import kotlinx.coroutines.launch
 
 class MovieViewModel
@@ -22,7 +21,7 @@ class MovieViewModel
 
     val movie: MutableState<Movie?> = mutableStateOf(null)
     val loading: MutableState<Boolean> = mutableStateOf(false)
-    val credits: MutableState<Credits?> = mutableStateOf(null)
+    val credits: MutableState<MovieCredits?> = mutableStateOf(null)
     val recommendations: MutableState<List<MovieSearch>?> = mutableStateOf(null)
 
     fun onTriggerEvent(event: MovieEvent) {

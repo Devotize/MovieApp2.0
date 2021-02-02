@@ -1,25 +1,21 @@
 package com.sychev.movieapp.network.mapper
 
-import com.sychev.movieapp.domain.model.Credits
-import com.sychev.movieapp.domain.model.Movie
+import com.sychev.movieapp.domain.model.*
 import com.sychev.movieapp.domain.model.Movie.Genre
-import com.sychev.movieapp.domain.model.MovieSearch
-import com.sychev.movieapp.domain.model.Person
 import com.sychev.movieapp.domain.util.*
-import com.sychev.movieapp.network.model.CastDto
-import com.sychev.movieapp.network.model.CrewDto
-import com.sychev.movieapp.network.model.MovieDto
+import com.sychev.movieapp.network.model.*
 import com.sychev.movieapp.network.model.MovieDto.*
-import com.sychev.movieapp.network.model.MovieSearchDto
 import com.sychev.movieapp.network.responses.CreditsResponse
+import com.sychev.movieapp.network.responses.PersonMovieCreditsResponse
 
 class MovieDtoMapper
     : DomainMovieSearchMapper<MovieSearchDto, MovieSearch>,
         DomainMovieMapper<MovieDto, Movie>,
     DomainCollectionMapper<CollectionDto, Movie.Collection>,
         DomainGenreMapper<GenreDto, Genre>,
-        DomainPersonMapper<CastDto, CrewDto, Person>,
-        DomainCreditsMapper<CreditsResponse, Credits>
+        DomainPersonCastMapper<CastDto, CrewDto, Person>,
+        DomainCreditsMapper<CreditsResponse, MovieCredits>,
+        DomainPersonMapper<PersonDto, Person>
 {
 
     override fun toDomainMovieSearch(model: MovieSearchDto): MovieSearch {
@@ -214,20 +210,20 @@ class MovieDtoMapper
         )
     }
 
-    override fun toDomainCredits(model: CreditsResponse): Credits {
+    override fun toDomainCredits(model: CreditsResponse): MovieCredits {
         val cast = model.cast?.map {
             toDomainPersonFromCastDto(it)
         }
         val crew = model.crew?.map{
             toDomainPersonFromCrewDto(it)
         }
-        return Credits(
+        return MovieCredits(
             cast = cast,
             crew = crew
         )
     }
 
-    override fun fromDomainCredits(domainModel: Credits): CreditsResponse {
+    override fun fromDomainCredits(domainModel: MovieCredits): CreditsResponse {
         val cast = domainModel.cast?.map {
             fromDomainPersonToCastDto(it)
         }
@@ -237,6 +233,45 @@ class MovieDtoMapper
         return CreditsResponse(
             cast = cast,
             crew = crew
+        )
+    }
+
+    override fun toDomainPerson(model: PersonDto): Person {
+        return Person(
+            biography = model.biography,
+            birthDay = model.birthDay,
+            deathDay = model.deathDay,
+            gender = model.gender,
+            id = model.id,
+            imdbId = model.imdbId,
+            knownForDepartment = model.knownForDepartment,
+            name = model.name,
+            placeOfBirth = model.placeOfBirth,
+            popularity = model.popularity,
+            profilePath = model.profilePath,
+        )
+    }
+
+    override fun fromDomainPerson(domainModel: Person): PersonDto {
+        return PersonDto(
+            biography = domainModel.biography,
+            birthDay = domainModel.birthDay,
+            deathDay = domainModel.deathDay,
+            gender = domainModel.gender,
+            id = domainModel.id,
+            imdbId = domainModel.imdbId,
+            knownForDepartment = domainModel.knownForDepartment,
+            name = domainModel.name,
+            placeOfBirth = domainModel.placeOfBirth,
+            popularity = domainModel.popularity,
+            profilePath = domainModel.profilePath,
+        )
+    }
+
+    fun toPersonMovieCredits(model: PersonMovieCreditsResponse): PersonMovieCredits {
+        return PersonMovieCredits(
+            cast = model.cast?.let { toDomainMovieList(it) },
+            crew = model.crew?.let{toDomainMovieList(it)}
         )
     }
 }
