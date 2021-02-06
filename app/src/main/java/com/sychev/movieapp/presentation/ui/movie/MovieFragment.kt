@@ -6,11 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
@@ -24,7 +22,6 @@ import com.sychev.movieapp.presentation.ui.components.DetailMovieDescription
 import com.sychev.movieapp.presentation.ui.movie.MovieEvent.*
 import com.sychev.movieapp.presentation.ui.theme.AppTheme
 import com.sychev.movieapp.util.TAG
-import com.sychev.movieapp.util.loadPicture
 import com.sychev.movieapp.util.loadPictureFromTMDB
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -55,10 +52,14 @@ class MovieFragment: Fragment() {
                 val darkTheme = (activity as MainActivity).darkTheme.value
                 val credits = viewModel.credits.value
                 val recommendations = viewModel.recommendations.value
+                val hasNetworkConnection = (activity as MainActivity).connectionLiveData.observeAsState(
+                    initial = true
+                ).value
 
                 AppTheme(
                     darkTheme = darkTheme,
-                    loading = loading
+                    loading = loading,
+                    hasNetworkConnection = hasNetworkConnection
                 ) {
                     movie?.let{movie ->
                         val drawable = movie.posterPath?.let { loadPictureFromTMDB(

@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -38,8 +39,15 @@ class PersonFragment : Fragment() {
                 val movies = viewModel.movies.value
                 val loading = viewModel.loading.value
                 val darkTheme = (activity as MainActivity).darkTheme.value
+                val hasNetworkConnection = (activity as MainActivity).connectionLiveData.observeAsState(
+                    initial = true
+                ).value
                 
-                AppTheme(darkTheme = darkTheme, loading = loading) {
+                AppTheme(
+                    darkTheme = darkTheme,
+                    loading = loading,
+                    hasNetworkConnection = hasNetworkConnection
+                ) {
                     Log.d(TAG, "onCreateView: person = $person")
                     Log.d(TAG, "onCreateView: movies = $movies")
                 }

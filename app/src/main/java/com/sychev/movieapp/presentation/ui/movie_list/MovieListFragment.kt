@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Scaffold
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
@@ -48,10 +49,12 @@ class MovieListFragment : Fragment() {
                 val mainActivity = activity as MainActivity
                 val darkTheme = mainActivity.darkTheme.value
                 val page = viewModel.page.value
+                val hasNetworkConnection = mainActivity.connectionLiveData.observeAsState(initial = true).value
 
                 AppTheme(
                     darkTheme = darkTheme,
                     loading = loading,
+                    hasNetworkConnection = hasNetworkConnection
                 ) {
                     Scaffold(
                         bottomBar = {
