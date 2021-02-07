@@ -1,8 +1,11 @@
 package com.sychev.movieapp.di
 
+import android.content.Context
+import android.net.ConnectivityManager
 import com.google.gson.GsonBuilder
 import com.sychev.movieapp.network.MovieApi
 import com.sychev.movieapp.network.mapper.MovieDtoMapper
+import com.sychev.movieapp.network.utils.ConnectionLiveData
 import com.sychev.movieapp.util.API_KEY
 import com.sychev.movieapp.util.API_LANGUAGE
 import com.sychev.movieapp.util.API_URL
@@ -10,12 +13,15 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.android.qualifiers.ActivityContext
+import dagger.hilt.android.qualifiers.ApplicationContext
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -30,7 +36,13 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideOkHttpClient(): OkHttpClient{
+    fun provideConnectivityLiveData(@ApplicationContext context: Context): ConnectionLiveData {
+        return ConnectionLiveData(context)
+    }
+
+    @Singleton
+    @Provides
+    fun provideOkHttpClient(@ApplicationContext context: Context): OkHttpClient{
         return OkHttpClient().newBuilder()
             .addInterceptor(object: Interceptor{
                 override fun intercept(chain: Interceptor.Chain): Response {
@@ -45,6 +57,7 @@ object NetworkModule {
                 }
 
             }).addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY })
+
             .build()
     }
     @Singleton
@@ -56,6 +69,12 @@ object NetworkModule {
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
             .build()
             .create(MovieApi::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideConnectivityManager(@ApplicationContext context: Context): ConnectivityManager {
+        return context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     }
 
 }

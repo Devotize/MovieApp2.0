@@ -1,23 +1,33 @@
 package com.sychev.movieapp.repository
 
+import android.net.ConnectivityManager
 import android.util.Log
 import com.sychev.movieapp.cache.dao.MovieDao
 import com.sychev.movieapp.cache.mapper.MovieEntityMapper
 import com.sychev.movieapp.domain.model.*
 import com.sychev.movieapp.network.MovieApi
 import com.sychev.movieapp.network.mapper.MovieDtoMapper
+import com.sychev.movieapp.network.responses.MovieSearchResponse
+import com.sychev.movieapp.network.utils.ConnectionLiveData
 import com.sychev.movieapp.util.TAG
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class MovieRepository_Impl(
     private val service: MovieApi,
     private val mapperDto: MovieDtoMapper,
     private val mapperEntity: MovieEntityMapper,
-    private val movieDao: MovieDao
+    private val movieDao: MovieDao,
+    private val connectivityManager: ConnectivityManager
 ): MovieRepository {
 
-    override suspend fun searchMovies(query: String, page: Int): List<MovieSearch> {
-        return mapperDto.toDomainMovieList(service.searchMovies(query = query, page = page).results)
+    override suspend fun searchMovies(query: String, page: Int): List<MovieSearch>? {
+        return if (!connectivityManager.isActiveNetworkMetered)
+            mapperDto.toDomainMovieList(service.searchMovies(query = query, page = page).results)
+        else
+            null
     }
 
     override suspend fun getMovieFromNetwork(id: Int): Movie {

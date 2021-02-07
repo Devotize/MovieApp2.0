@@ -1,5 +1,7 @@
 package com.sychev.movieapp.presentation.ui.movie_list
 
+import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -49,7 +51,9 @@ class MovieListFragment : Fragment() {
                 val mainActivity = activity as MainActivity
                 val darkTheme = mainActivity.darkTheme.value
                 val page = viewModel.page.value
-                val hasNetworkConnection = mainActivity.connectionLiveData.observeAsState(initial = true).value
+                val hasNetworkConnection = mainActivity.connectionLiveData.observeAsState(
+                    initial = !(context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager).isActiveNetworkMetered
+                ).value
 
                 AppTheme(
                     darkTheme = darkTheme,

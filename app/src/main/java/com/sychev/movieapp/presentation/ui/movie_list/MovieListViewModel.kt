@@ -90,12 +90,14 @@ class MovieListViewModel
                 query = this.query.value,
                 page = page.value
             )
-        movies.value = result
         loading.value = false
-        result.forEach { movieSearch ->
-            movieSearch.checkMovieSearchForStatus()
+        if (result != null) {
+            movies.value = result
+            result.forEach { movieSearch ->
+                movieSearch.checkMovieSearchForStatus()
+            }
+            movies.value = result
         }
-        movies.value = result
     }
 
     fun onQueryChange(query: String) {
@@ -111,10 +113,12 @@ class MovieListViewModel
                 query = query.value,
                 page = page.value
             )
-            result.forEach {
-                it.checkMovieSearchForStatus()
+            if (result != null) {
+                result.forEach {
+                    it.checkMovieSearchForStatus()
+                }
+                newMovies.addAll(result)
             }
-            newMovies.addAll(result)
             Log.d(TAG, "nexPage triggeres: newMovies: $newMovies")
             movies.value = listOf()
             movies.value = newMovies

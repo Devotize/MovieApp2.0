@@ -26,6 +26,7 @@ private val lightThemeColors = lightColors(
     onSecondary  = Color.Black,
     onSurface = Black2,
     onError = RedErrorLight,
+    onBackground = Grey2
 )
 
 private val darkThemeColors = lightColors(
@@ -40,6 +41,7 @@ private val darkThemeColors = lightColors(
     onSecondary  = Color.White,
     onSurface = Color.White,
     onError = RedErrorLight,
+    onBackground = Grey2
 )
 
 @Composable

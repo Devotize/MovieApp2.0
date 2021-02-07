@@ -1,9 +1,11 @@
 package com.sychev.movieapp.di
 
+import android.net.ConnectivityManager
 import com.sychev.movieapp.cache.dao.MovieDao
 import com.sychev.movieapp.cache.mapper.MovieEntityMapper
 import com.sychev.movieapp.network.MovieApi
 import com.sychev.movieapp.network.mapper.MovieDtoMapper
+import com.sychev.movieapp.network.utils.ConnectionLiveData
 import com.sychev.movieapp.repository.MovieRepository
 import com.sychev.movieapp.repository.MovieRepository_Impl
 import dagger.Module
@@ -22,13 +24,15 @@ object RepositoryModule {
         service: MovieApi,
         mapperDto: MovieDtoMapper,
         mapperEntity: MovieEntityMapper,
-        movieDao: MovieDao
+        movieDao: MovieDao,
+        connectivityManager: ConnectivityManager
     ): MovieRepository{
         return MovieRepository_Impl(
             service = service,
             mapperDto = mapperDto,
             mapperEntity = mapperEntity,
-            movieDao = movieDao
+            movieDao = movieDao,
+            connectivityManager = connectivityManager
         )
     }
 

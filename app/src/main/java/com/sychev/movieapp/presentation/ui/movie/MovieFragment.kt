@@ -1,5 +1,7 @@
 package com.sychev.movieapp.presentation.ui.movie
 
+import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -53,7 +55,7 @@ class MovieFragment: Fragment() {
                 val credits = viewModel.credits.value
                 val recommendations = viewModel.recommendations.value
                 val hasNetworkConnection = (activity as MainActivity).connectionLiveData.observeAsState(
-                    initial = true
+                    initial = !(context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager).isActiveNetworkMetered
                 ).value
 
                 AppTheme(

@@ -5,9 +5,9 @@ import com.google.gson.annotations.SerializedName
 data class PersonDto(
     @SerializedName("biography")
     val biography: String? = null,
-    @SerializedName("birt_day")
+    @SerializedName("birthday")
     val birthDay: String? = null,
-    @SerializedName("death_day")
+    @SerializedName("deathday")
     val deathDay: String? = null,
     @SerializedName("gender")
     val gender: Int? = null,  //2-is male, 1-is female

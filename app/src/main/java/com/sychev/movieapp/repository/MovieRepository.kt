@@ -4,7 +4,7 @@ import com.sychev.movieapp.domain.model.*
 
 interface MovieRepository {
 
-    suspend fun searchMovies(query: String, page: Int): List<MovieSearch>
+    suspend fun searchMovies(query: String, page: Int): List<MovieSearch>?
 
     suspend fun getMovieFromNetwork(id: Int): Movie
 
