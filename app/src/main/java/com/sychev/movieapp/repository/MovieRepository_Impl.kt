@@ -23,7 +23,7 @@ class MovieRepository_Impl(
     private val connectivityManager: ConnectivityManager
 ): MovieRepository {
 
-    override suspend fun searchMovies(query: String, page: Int): List<MovieSearch>? {
+    override suspend fun searchMovies(query: String, page: Int): List<Movie>? {
         return if (!connectivityManager.isActiveNetworkMetered)
             mapperDto.toDomainMovieList(service.searchMovies(query = query, page = page).results)
         else
@@ -36,7 +36,7 @@ class MovieRepository_Impl(
 
     }
 
-    override suspend fun getMoviesByStatus(watchStatus: Boolean): List<MovieSearch> {
+    override suspend fun getMoviesByStatus(watchStatus: Boolean): List<Movie> {
         return mapperEntity.toDomainMovieList(movieDao.getAllMoviesWithStatus(watchStatus))
     }
 
@@ -49,16 +49,8 @@ class MovieRepository_Impl(
         movieDao.insert(mapperEntity.fromDomainMovie(movie))
     }
 
-    override suspend fun addMovieSearchToCache(movie: MovieSearch) {
-        movieDao.insert(mapperEntity.fromDomainMovieSearch(movie))
-    }
-
     override suspend fun deleteMovieFromCache(movie: Movie) {
         movieDao.delete(mapperEntity.fromDomainMovie(movie))
-    }
-
-    override suspend fun deleteMovieSearchFromCache(movie: MovieSearch) {
-        movieDao.delete(mapperEntity.fromDomainMovieSearch(movie))
     }
 
     override suspend fun deleteById(id: Int) {
@@ -69,7 +61,7 @@ class MovieRepository_Impl(
         return mapperDto.toDomainCredits(service.getCredits(id))
     }
 
-    override suspend fun getRecommendations(id: Int): List<MovieSearch>? {
+    override suspend fun getRecommendations(id: Int): List<Movie> {
         return mapperDto.toDomainMovieList(service.getRecommendations(id).results)
     }
 

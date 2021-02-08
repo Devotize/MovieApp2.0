@@ -9,52 +9,13 @@ import com.sychev.movieapp.network.responses.CreditsResponse
 import com.sychev.movieapp.network.responses.PersonMovieCreditsResponse
 
 class MovieDtoMapper
-    : DomainMovieSearchMapper<MovieSearchDto, MovieSearch>,
-        DomainMovieMapper<MovieDto, Movie>,
+    : DomainMovieMapper<MovieDto, Movie>,
     DomainCollectionMapper<CollectionDto, Movie.Collection>,
         DomainGenreMapper<GenreDto, Genre>,
         DomainPersonCastMapper<CastDto, CrewDto, Person>,
         DomainCreditsMapper<CreditsResponse, MovieCredits>,
         DomainPersonMapper<PersonDto, Person>
 {
-
-    override fun toDomainMovieSearch(model: MovieSearchDto): MovieSearch {
-        return MovieSearch(
-            adult = model.adult,
-            backdropPath = model.backdropPath,
-            genreIds = model.genreIds,
-            id = model.id,
-            originalLanguage = model.originalLanguage,
-            originalTitle = model.originalTitle,
-            overview = model.overview,
-            popularity = model.popularity,
-            posterPath = model.posterPath,
-            releaseDate = model.releaseDate,
-            title = model.title,
-            video = model.video,
-            voteAverage = model.voteAverage,
-            voteCount = model.voteCount,
-        )
-    }
-
-    override fun fromDomainMovieSearch(domainModel: MovieSearch): MovieSearchDto {
-        return MovieSearchDto(
-            adult = domainModel.adult,
-            backdropPath = domainModel.backdropPath,
-            genreIds = domainModel.genreIds,
-            id = domainModel.id,
-            originalLanguage = domainModel.originalLanguage,
-            originalTitle = domainModel.originalTitle,
-            overview = domainModel.overview,
-            popularity = domainModel.popularity,
-            posterPath = domainModel.posterPath,
-            releaseDate = domainModel.releaseDate,
-            title = domainModel.title,
-            video = domainModel.video,
-            voteAverage = domainModel.voteAverage,
-            voteCount = domainModel.voteCount,
-        )
-    }
 
     override fun toDomainMovie(model: MovieDto): Movie{
         return Movie(
@@ -108,6 +69,10 @@ class MovieDtoMapper
         )
     }
 
+    fun toDomainMovieList(list: List<MovieDto>): List<Movie> {
+        return list.map{toDomainMovie(it)}
+    }
+
     override fun toDomainCollection(model: CollectionDto): Movie.Collection {
         return Movie.Collection(
             model.id,
@@ -149,18 +114,6 @@ class MovieDtoMapper
     override fun fromDomainGenreList(domainList: List<Genre>): List<GenreDto> {
         return domainList.map{
             fromDomainGenre(it)
-        }
-    }
-
-    override fun toDomainMovieList(list: List<MovieSearchDto>): List<MovieSearch> {
-        return list.map{
-            toDomainMovieSearch(it)
-        }
-    }
-
-    override fun fromDomainMovieList(domainList: List<MovieSearch>): List<MovieSearchDto> {
-        return domainList.map{
-            fromDomainMovieSearch(it)
         }
     }
 

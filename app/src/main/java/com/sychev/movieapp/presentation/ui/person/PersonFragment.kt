@@ -195,10 +195,10 @@ class PersonFragment : Fragment() {
                                         MovieCard(
                                             movie = movie,
                                             addToWatched = {
-                                                viewModel.onTriggerEvent(PersonEvent.AddMovieToWatchedEvent(it.toMovie()))
+                                                viewModel.onTriggerEvent(PersonEvent.AddMovieToWatchedEvent(it))
                                                            },
                                             addToWatchList = {
-                                                viewModel.onTriggerEvent(PersonEvent.AddMovieToWatchlistEvent(it.toMovie()))
+                                                viewModel.onTriggerEvent(PersonEvent.AddMovieToWatchlistEvent(it))
                                                              },
                                             onClick = {
                                                 movie.id?.let{ id ->

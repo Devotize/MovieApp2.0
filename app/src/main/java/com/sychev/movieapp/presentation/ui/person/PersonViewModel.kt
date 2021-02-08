@@ -7,7 +7,6 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sychev.movieapp.domain.model.Movie
-import com.sychev.movieapp.domain.model.MovieSearch
 import com.sychev.movieapp.domain.model.Person
 import com.sychev.movieapp.presentation.ui.person.PersonEvent.*
 import com.sychev.movieapp.repository.MovieRepository
@@ -22,7 +21,7 @@ class PersonViewModel
 
     val person: MutableState<Person?> = mutableStateOf(null)
     val loading: MutableState<Boolean> = mutableStateOf(false)
-    val movies: MutableState<List<MovieSearch>?> = mutableStateOf(null)
+    val movies: MutableState<List<Movie>?> = mutableStateOf(null)
 
     fun onTriggerEvent(event: PersonEvent) {
         when (event) {
@@ -64,12 +63,12 @@ class PersonViewModel
     }
 
     private suspend fun getPersonMovieCredits(id: Int) {
-        val movies: ArrayList<MovieSearch> = ArrayList()
+        val movies: ArrayList<Movie> = ArrayList()
         val result = repository.getPersonMovieCredits(id)
         result.cast?.let { movies.addAll(it) }
         result.crew?.let { movies.addAll(it) }
         movies.forEach {
-            it.checkMovieSearchForStatus()
+            it.checkMovieForStatus()
         }
         this.movies.value = movies
     }
@@ -81,13 +80,13 @@ class PersonViewModel
     private suspend fun updateMovies() {
         val movies = this.movies.value
         movies?.forEach {
-            it.checkMovieSearchForStatus()
+            it.checkMovieForStatus()
         }
         this.movies.value = listOf()
         this.movies.value = movies
     }
 
-    private suspend fun MovieSearch.checkMovieSearchForStatus() {
+    private suspend fun Movie.checkMovieForStatus() {
         this.id?.let{ id ->
             val movie = repository.getMovieFromCache(id)
             if (movie != null){

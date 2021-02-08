@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sychev.movieapp.domain.model.MovieCredits
 import com.sychev.movieapp.domain.model.Movie
-import com.sychev.movieapp.domain.model.MovieSearch
 import com.sychev.movieapp.presentation.ui.movie.MovieEvent.*
 import com.sychev.movieapp.repository.MovieRepository
 import com.sychev.movieapp.util.TAG
@@ -22,7 +21,7 @@ class MovieViewModel
     val movie: MutableState<Movie?> = mutableStateOf(null)
     val loading: MutableState<Boolean> = mutableStateOf(false)
     val credits: MutableState<MovieCredits?> = mutableStateOf(null)
-    val recommendations: MutableState<List<MovieSearch>?> = mutableStateOf(null)
+    val recommendations: MutableState<List<Movie>?> = mutableStateOf(null)
 
     fun onTriggerEvent(event: MovieEvent) {
         when (event) {
@@ -62,20 +61,9 @@ class MovieViewModel
         recommendations.value = null
         val result = repository.getRecommendations(id)
         result?.forEach {
-            it.checkMovieSearchForStatus()
+            it.checkMovieForStatus()
         }
         recommendations.value = result
-    }
-
-    private suspend fun MovieSearch.checkMovieSearchForStatus() {
-        this.id?.let{ id ->
-            val movie = repository.getMovieFromCache(id)
-            if (movie != null){
-                this.watchStatus = movie.watchStatus
-            } else {
-                this.watchStatus = null
-            }
-        }
     }
 
     private suspend fun getCredits(id: Int) {
@@ -91,13 +79,13 @@ class MovieViewModel
         movie.value = null
         val result = repository.getMovieFromNetwork(id)
         Log.d(TAG, "getMovie: result: $result")
-        result.checkMovieSearchForStatus()
+        result.checkMovieForStatus()
         movie.value = result
         Log.d(TAG, "getMovie: movie.value = ${movie.value}")
         loading.value = false
     }
 
-    private suspend fun Movie.checkMovieSearchForStatus() {
+    private suspend fun Movie.checkMovieForStatus() {
         this.id?.let{ id ->
             val movie = repository.getMovieFromCache(id)
             if (movie != null){
@@ -124,7 +112,7 @@ class MovieViewModel
 
     private suspend fun updateMovieWatchStatus() {
         val movie = movie.value
-        movie?.checkMovieSearchForStatus()
+        movie?.checkMovieForStatus()
         this.movie.value = null
         this.movie.value = movie
     }
@@ -132,7 +120,7 @@ class MovieViewModel
     private suspend fun updateRecommendations() {
         val recommendations = recommendations.value
         recommendations?.forEach {
-            it.checkMovieSearchForStatus()
+            it.checkMovieForStatus()
         }
         this.recommendations.value = recommendations
     }

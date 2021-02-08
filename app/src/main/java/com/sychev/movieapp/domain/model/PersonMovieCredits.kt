@@ -1,7 +1,7 @@
 package com.sychev.movieapp.domain.model
 
 data class PersonMovieCredits(
-    val cast: List<MovieSearch>? = null,
-    val crew: List<MovieSearch>? = null
+    val cast: List<Movie>? = null,
+    val crew: List<Movie>? = null
 ) {
 }

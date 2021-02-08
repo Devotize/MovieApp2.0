@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.sychev.movieapp.domain.model.Movie
-import com.sychev.movieapp.domain.model.MovieSearch
 import com.sychev.movieapp.presentation.ui.theme.Black1
 import com.sychev.movieapp.presentation.ui.theme.Green400
 import com.sychev.movieapp.presentation.ui.theme.Grey2

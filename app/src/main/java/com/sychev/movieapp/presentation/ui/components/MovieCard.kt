@@ -11,15 +11,15 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.sychev.movieapp.R
-import com.sychev.movieapp.domain.model.MovieSearch
+import com.sychev.movieapp.domain.model.Movie
 import com.sychev.movieapp.util.loadPictureFromTMDB
 
 @ExperimentalMaterialApi
 @Composable
 fun MovieCard(
-    movie: MovieSearch,
-    addToWatched: (MovieSearch) -> Unit,
-    addToWatchList: (MovieSearch) -> Unit,
+    movie: Movie,
+    addToWatched: (Movie) -> Unit,
+    addToWatchList: (Movie) -> Unit,
     onClick:() -> Unit
 ) {
     Card(

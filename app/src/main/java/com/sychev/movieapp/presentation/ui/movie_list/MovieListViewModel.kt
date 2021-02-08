@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sychev.movieapp.domain.model.MovieSearch
+import com.sychev.movieapp.domain.model.Movie
 import com.sychev.movieapp.presentation.ui.movie_list.ListType.*
 import com.sychev.movieapp.presentation.ui.movie_list.MovieListEvent.*
 import com.sychev.movieapp.repository.MovieRepository
@@ -18,7 +18,7 @@ class MovieListViewModel
     private val repository: MovieRepository,
 ) : ViewModel() {
 
-    val movies: MutableState<List<MovieSearch>> = mutableStateOf(ArrayList())
+    val movies: MutableState<List<Movie>> = mutableStateOf(ArrayList())
     val query: MutableState<String> = mutableStateOf("Transformers")
     val loading = mutableStateOf(false)
     private val currentListType: MutableState<ListType> = mutableStateOf(SEARCH_LIST)
@@ -94,7 +94,7 @@ class MovieListViewModel
         if (result != null) {
             movies.value = result
             result.forEach { movieSearch ->
-                movieSearch.checkMovieSearchForStatus()
+                movieSearch.checkMovieForStatus()
             }
             movies.value = result
         }
@@ -115,7 +115,7 @@ class MovieListViewModel
             )
             if (result != null) {
                 result.forEach {
-                    it.checkMovieSearchForStatus()
+                    it.checkMovieForStatus()
                 }
                 newMovies.addAll(result)
             }
@@ -151,7 +151,7 @@ class MovieListViewModel
 
     }
 
-    private suspend fun MovieSearch.checkMovieSearchForStatus() {
+    private suspend fun Movie.checkMovieForStatus() {
         this.id?.let{ id ->
             val movie = repository.getMovieFromCache(id)
             if (movie != null){
@@ -162,26 +162,26 @@ class MovieListViewModel
         }
     }
 
-    private suspend fun addToWatchList(movie: MovieSearch) {
+    private suspend fun addToWatchList(movie: Movie) {
         movie.watchStatus = false
-        repository.addMovieSearchToCache(movie = movie)
+        repository.addMovieToCache(movie = movie)
     }
 
     private suspend fun deleteMovieById(id: Int) {
         repository.deleteById(id)
     }
 
-    private suspend fun addToWatched(movie: MovieSearch) {
+    private suspend fun addToWatched(movie: Movie) {
         movie.watchStatus = true
-        repository.addMovieSearchToCache(movie = movie)
+        repository.addMovieToCache(movie = movie)
 
     }
 
     private suspend fun updateMovies() {
-        val movies = mutableListOf<MovieSearch>()
+        val movies = mutableListOf<Movie>()
         movies.addAll(this.movies.value)
         movies.forEach {
-            it.checkMovieSearchForStatus()
+            it.checkMovieForStatus()
         }
         this.movies.value = listOf()
         this.movies.value = movies

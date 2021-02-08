@@ -20,17 +20,15 @@ import androidx.navigation.NavController
 import com.sychev.movieapp.R
 import com.sychev.movieapp.domain.model.MovieCredits
 import com.sychev.movieapp.domain.model.Movie
-import com.sychev.movieapp.domain.model.MovieSearch
 import com.sychev.movieapp.util.TAG
 import com.sychev.movieapp.util.getMonthByNumber
-import com.sychev.movieapp.util.toMovie
 
 @ExperimentalMaterialApi
 @Composable
 fun DetailMovieDescription(
     movie: Movie,
     credits: MovieCredits,
-    recommendations: List<MovieSearch>?,
+    recommendations: List<Movie>?,
     navController: NavController,
     addToWatched: (Movie) -> Unit,
     addToWatchlist: (Movie) -> Unit,
@@ -349,10 +347,10 @@ fun DetailMovieDescription(
                                 MovieCard(
                                     movie = item,
                                     addToWatched = {
-                                        addToWatched(item.toMovie())
+                                        addToWatched(item)
                                                    },
                                     addToWatchList = {
-                                        addToWatchlist(item.toMovie())
+                                        addToWatchlist(item)
                                                      },
                                     onClick = {
                                         item.id?.let { onRecommendationClick(it) }
