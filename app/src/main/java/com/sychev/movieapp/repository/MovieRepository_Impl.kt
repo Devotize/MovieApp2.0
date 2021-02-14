@@ -3,46 +3,62 @@ package com.sychev.movieapp.repository
 import android.net.ConnectivityManager
 import android.util.Log
 import com.sychev.movieapp.cache.dao.MovieDao
-import com.sychev.movieapp.cache.mapper.MovieEntityMapper
+import com.sychev.movieapp.cache.mapper.MultimediaEntityMapper
 import com.sychev.movieapp.domain.model.*
 import com.sychev.movieapp.network.MovieApi
 import com.sychev.movieapp.network.mapper.MovieDtoMapper
-import com.sychev.movieapp.network.responses.MovieSearchResponse
-import com.sychev.movieapp.network.utils.ConnectionLiveData
+import com.sychev.movieapp.network.mapper.MultimediaDtoMapper
+import com.sychev.movieapp.network.mapper.PersonDtoMapper
+import com.sychev.movieapp.network.mapper.TvShowDtoMapper
 import com.sychev.movieapp.util.TAG
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 
 class MovieRepository_Impl(
     private val service: MovieApi,
-    private val mapperDto: MovieDtoMapper,
-    private val mapperEntity: MovieEntityMapper,
+    private val movieMapperDto: MovieDtoMapper,
+    private val tvShowMapperDto: TvShowDtoMapper,
+    private val personMapperDto: PersonDtoMapper,
+    private val multimediaMapperDto: MultimediaDtoMapper,
+    private val mapperEntity: MultimediaEntityMapper,
     private val movieDao: MovieDao,
     private val connectivityManager: ConnectivityManager
 ): MovieRepository {
 
-    override suspend fun searchMovies(query: String, page: Int): List<Movie>? {
+    override suspend fun searchMovies(query: String, page: Int): List<Multimedia>? {
         return if (!connectivityManager.isActiveNetworkMetered)
-            mapperDto.toDomainMovieList(service.searchMovies(query = query, page = page).results)
+            movieMapperDto.toDomainMultimediaList(service.searchMovies(query = query, page = page).results)
+        else
+            null
+    }
+
+    override suspend fun searchTvShows(query: String, page: Int): List<Multimedia>? {
+        return if (!connectivityManager.isActiveNetworkMetered)
+            tvShowMapperDto.toDomainMultimediaList(service.searchTvShows(query = query, page = page).results)
         else
             null
     }
 
     override suspend fun getMovieFromNetwork(id: Int): Movie {
         Log.d(TAG, "getMovieFromNetwork: movie: ${service.getMovie(id)}")
-        return mapperDto.toDomainMovie(service.getMovie(id))
+        return movieMapperDto.toDomainMovie(service.getMovie(id))
 
     }
 
-    override suspend fun getMoviesByStatus(watchStatus: Boolean): List<Movie> {
-        return mapperEntity.toDomainMovieList(movieDao.getAllMoviesWithStatus(watchStatus))
+    override suspend fun getMultimediaByStatus(watchStatus: Boolean): List<Multimedia> {
+        return mapperEntity.toDomainMultimediaList(movieDao.getAllMultimediaWithStatus(watchStatus))
     }
 
-    override suspend fun getMovieFromCache(id: Int): Movie? {
-        val movieEntity = movieDao.getMovieById(id)
-        return if (movieEntity == null) null else mapperEntity.toDomainMovie(movieEntity)
+    override suspend fun getMultimediaFromCache(id: Int):Multimedia? {
+        val movieEntity = movieDao.getMultimediaById(id)
+        return if (movieEntity == null) null else mapperEntity.toDomainMultimedia(movieEntity)
+    }
+
+    override suspend fun addMultimediaToCache(multimedia: Multimedia) {
+        movieDao.insert(mapperEntity.fromDomainMultimedia(multimedia))
+    }
+
+    override suspend fun deleteMultimediaFromCache(multimedia: Multimedia) {
+        movieDao.delete(mapperEntity.fromDomainMultimedia(multimedia))
     }
 
     override suspend fun addMovieToCache(movie: Movie) {
@@ -58,19 +74,19 @@ class MovieRepository_Impl(
     }
 
     override suspend fun getCredits(id: Int): MovieCredits {
-        return mapperDto.toDomainCredits(service.getCredits(id))
+        return personMapperDto.toDomainCredits(service.getCredits(id))
     }
 
     override suspend fun getRecommendations(id: Int): List<Movie> {
-        return mapperDto.toDomainMovieList(service.getRecommendations(id).results)
+        return movieMapperDto.toDomainMovieList(service.getRecommendations(id).results)
     }
 
     override suspend fun getPerson(id: Int): Person? {
-        return service.getPerson(id)?.let { mapperDto.toDomainPerson(it) }
+        return service.getPerson(id)?.let { personMapperDto.toDomainPerson(it) }
     }
 
     override suspend fun getPersonMovieCredits(id: Int): PersonMovieCredits {
-        return mapperDto.toPersonMovieCredits(service.getPersonMovieCredits(id))
+        return movieMapperDto.toPersonMovieCredits(service.getPersonMovieCredits(id))
     }
 
 }

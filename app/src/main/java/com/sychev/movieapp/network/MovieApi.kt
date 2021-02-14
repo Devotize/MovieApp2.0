@@ -2,10 +2,7 @@ package com.sychev.movieapp.network
 
 import com.sychev.movieapp.network.model.MovieDto
 import com.sychev.movieapp.network.model.PersonDto
-import com.sychev.movieapp.network.responses.CreditsResponse
-import com.sychev.movieapp.network.responses.MovieResponse
-import com.sychev.movieapp.network.responses.MovieSearchResponse
-import com.sychev.movieapp.network.responses.PersonMovieCreditsResponse
+import com.sychev.movieapp.network.responses.*
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -18,6 +15,12 @@ interface MovieApi {
         @Query("query") query: String,
         @Query("page") page: Int,
     ): MovieSearchResponse
+
+    @GET("search/tv")
+    suspend fun searchTvShows(
+        @Query("query") query: String,
+        @Query("page") page: Int
+    ): TvShowSearchResponse
 
     @GET("movie/{id}")
     suspend fun getMovie(@Path("id", encoded = true) id: Int): MovieDto

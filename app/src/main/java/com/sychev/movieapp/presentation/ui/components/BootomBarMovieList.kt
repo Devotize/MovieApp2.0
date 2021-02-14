@@ -1,21 +1,22 @@
 package com.sychev.movieapp.presentation.ui.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.List
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.sychev.movieapp.presentation.ui.movie_list.ListType
 
 @Composable
 fun BottomBarMovieList(
+    currentListType: ListType,
     onListClick: () -> Unit,
     onFavoriteClick: () -> Unit,
     onDoneClick: () -> Unit
@@ -28,54 +29,44 @@ fun BottomBarMovieList(
             .padding(8.dp),
         shape = MaterialTheme.shapes.medium
     ) {
-        ConstraintLayout(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(8.dp)
+        val listType = ListType.values()
+        TabRow(
+            selectedTabIndex = listType.indexOf(currentListType),
+            backgroundColor = MaterialTheme.colors.secondary
         ) {
-            val (listRef, watchlistRef, watchedRef) = createRefs()
-            IconButton(
-                modifier = Modifier
-                    .constrainAs(listRef){
-                        top.linkTo(parent.top)
-                        bottom.linkTo(parent.bottom)
-                        start.linkTo(parent.start)
-                        end.linkTo(watchlistRef.start)
-                    },
-                onClick = {
-                    onListClick()
-                },
-            ) {
-                Icon(Icons.Default.List)
-            }
-            IconButton(
-                modifier = Modifier
-                    .constrainAs(watchlistRef){
-                        top.linkTo(parent.top)
-                        bottom.linkTo(parent.bottom)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                    },
-                onClick = {
-                    onFavoriteClick()
-                },
-            ) {
-                Icon(Icons.Default.Favorite)
-            }
-            IconButton(
-                modifier = Modifier
-                    .constrainAs(watchedRef){
-                        top.linkTo(parent.top)
-                        bottom.linkTo(parent.bottom)
-                        start.linkTo(watchlistRef.end)
-                        end.linkTo(parent.end)
-                    },
-                onClick = {
-                     onDoneClick()
-                },
-            ) {
-                Icon(Icons.Default.Done)
-            }
+
+            Icon(
+                imageVector = Icons.Default.List,
+                modifier = Modifier.clickable(onClick = onListClick)
+            )
+
+
+            Icon(
+                imageVector = Icons.Default.Favorite,
+                modifier = Modifier.clickable(onClick = onFavoriteClick)
+            )
+
+
+            Icon(
+                imageVector = Icons.Default.Done,
+                modifier = Modifier.clickable(onClick = onDoneClick)
+            )
+
         }
+
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

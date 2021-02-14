@@ -5,6 +5,9 @@ import android.net.ConnectivityManager
 import com.google.gson.GsonBuilder
 import com.sychev.movieapp.network.MovieApi
 import com.sychev.movieapp.network.mapper.MovieDtoMapper
+import com.sychev.movieapp.network.mapper.MultimediaDtoMapper
+import com.sychev.movieapp.network.mapper.PersonDtoMapper
+import com.sychev.movieapp.network.mapper.TvShowDtoMapper
 import com.sychev.movieapp.network.utils.ConnectionLiveData
 import com.sychev.movieapp.util.API_KEY
 import com.sychev.movieapp.util.API_LANGUAGE
@@ -75,6 +78,24 @@ object NetworkModule {
     @Provides
     fun provideConnectivityManager(@ApplicationContext context: Context): ConnectivityManager {
         return context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    }
+
+    @Singleton
+    @Provides
+    fun provideTvShowDtoMapper(): TvShowDtoMapper {
+        return TvShowDtoMapper()
+    }
+
+    @Singleton
+    @Provides
+    fun providePersonDtoMapper(): PersonDtoMapper {
+        return PersonDtoMapper()
+    }
+
+    @Singleton
+    @Provides
+    fun provideMultimedaiDtoMapper(): MultimediaDtoMapper{
+        return MultimediaDtoMapper()
     }
 
 }

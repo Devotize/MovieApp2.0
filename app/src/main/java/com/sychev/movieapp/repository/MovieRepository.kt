@@ -4,13 +4,19 @@ import com.sychev.movieapp.domain.model.*
 
 interface MovieRepository {
 
-    suspend fun searchMovies(query: String, page: Int): List<Movie>?
+    suspend fun searchMovies(query: String, page: Int): List<Multimedia>?
+
+    suspend fun searchTvShows(query: String, page: Int): List<Multimedia>?
 
     suspend fun getMovieFromNetwork(id: Int): Movie
 
-    suspend fun getMoviesByStatus(watchStatus: Boolean): List<Movie>
+    suspend fun getMultimediaByStatus(watchStatus: Boolean): List<Multimedia>
 
-    suspend fun getMovieFromCache(id: Int): Movie?
+    suspend fun getMultimediaFromCache(id: Int): Multimedia?
+
+    suspend fun addMultimediaToCache(multimedia: Multimedia)
+
+    suspend fun deleteMultimediaFromCache(multimedia: Multimedia)
 
     suspend fun addMovieToCache(movie: Movie)
 

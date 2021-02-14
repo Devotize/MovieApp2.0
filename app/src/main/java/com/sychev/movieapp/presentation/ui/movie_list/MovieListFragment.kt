@@ -21,9 +21,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.sychev.movieapp.R
 import com.sychev.movieapp.presentation.MainActivity
-import com.sychev.movieapp.presentation.ui.components.BottomBarMovieList
-import com.sychev.movieapp.presentation.ui.components.MovieCard
-import com.sychev.movieapp.presentation.ui.components.SearchBar
+import com.sychev.movieapp.presentation.ui.components.*
 import com.sychev.movieapp.presentation.ui.movie_list.MovieListEvent.*
 import com.sychev.movieapp.presentation.ui.theme.AppTheme
 import com.sychev.movieapp.util.TAG
@@ -45,15 +43,17 @@ class MovieListFragment : Fragment() {
         viewModel.onTriggerEvent(UpdateMovies)
         return ComposeView(requireContext()).apply {
             setContent {
-                val movies = viewModel.movies.value
+                val movies = viewModel.multimedia.value
                 val query = viewModel.query.value
                 val loading = viewModel.loading.value
                 val mainActivity = activity as MainActivity
                 val darkTheme = mainActivity.darkTheme.value
                 val page = viewModel.page.value
+                val currentListType = viewModel.currentListType.value
                 val hasNetworkConnection = mainActivity.connectionLiveData.observeAsState(
                     initial = !(context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager).isActiveNetworkMetered
                 ).value
+                val currentCategory = viewModel.currentCategory.value
 
                 AppTheme(
                     darkTheme = darkTheme,
@@ -63,6 +63,7 @@ class MovieListFragment : Fragment() {
                     Scaffold(
                         bottomBar = {
                             BottomBarMovieList(
+                                currentListType = currentListType,
                                 onListClick = {
                                     viewModel.onTriggerEvent(SearchMoviesEvent)
                                               },
@@ -87,6 +88,13 @@ class MovieListFragment : Fragment() {
                                 changeDarkTheme = mainActivity::switchDarkTheme,
                                 saveDarkThemeToPreferences = mainActivity::putDarkThemeInPreferences
                             )
+                            if (currentListType == ListType.SEARCH_LIST) {
+                                CategoryChips(
+                                    currentCategory = currentCategory,
+                                    onClick = {
+                                    viewModel.onTriggerEvent(ChangeCategoryEvent(it))
+                                })
+                            }
                             LazyColumn(
                             ) {
                                 itemsIndexed(
@@ -97,8 +105,8 @@ class MovieListFragment : Fragment() {
                                         viewModel.onTriggerEvent(NextPageEvent)
                                     }
                                     Log.d(TAG, "onCreateView: Index: $index")
-                                    MovieCard(
-                                        movie = item,
+                                    MultimediaCard(
+                                        multimedia = item,
                                         addToWatched = {
                                             viewModel.onTriggerEvent(AddMovieSearchToWatchedEvent(it))
                                         },

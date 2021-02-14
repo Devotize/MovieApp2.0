@@ -17,10 +17,10 @@ import com.sychev.movieapp.util.loadPictureFromTMDB
 
 @ExperimentalMaterialApi
 @Composable
-fun MovieCard(
-    movie: Movie,
-    addToWatched: (Movie) -> Unit,
-    addToWatchList: (Movie) -> Unit,
+fun MultimediaCard(
+    multimedia: Multimedia,
+    addToWatched: (Multimedia) -> Unit,
+    addToWatchList: (Multimedia) -> Unit,
     onClick:() -> Unit
 ) {
     Card(
@@ -39,7 +39,7 @@ fun MovieCard(
             Row() {
 //                Log.d(TAG, "MovieCard: move.posterPath = ${movie.posterPath}")
                 val image = loadPictureFromTMDB(
-                    url = movie.posterPath,
+                    url = multimedia.posterPath,
                     defaultImage = R.drawable.default_movie_poster,
                     size = "w500"
                 ).value
@@ -64,15 +64,15 @@ fun MovieCard(
                         modifier = Modifier
                             .padding(bottom = 24.dp, top = 24.dp, start = 8.dp, end = 8.dp)
                             .fillMaxWidth(),
-                       watchStatus = movie.watchStatus,
-                        onClick = {addToWatched(movie)}
+                        watchStatus = multimedia.watchStatus,
+                        onClick = {addToWatched(multimedia)}
                     )
 
                     AddToWatchlistButton(modifier = Modifier
                         .padding(bottom = 24.dp, top = 24.dp, start = 8.dp, end = 8.dp)
                         .fillMaxWidth(),
-                        watchStatus = movie.watchStatus,
-                        onClick = {addToWatchList(movie)}
+                        watchStatus = multimedia.watchStatus,
+                        onClick = {addToWatchList(multimedia)}
                     )
 
                 }
@@ -82,7 +82,7 @@ fun MovieCard(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                movie.title?.let {
+                multimedia.title?.let {
                     Text(
                         modifier = Modifier
                             .preferredWidth(280.dp)
@@ -91,7 +91,7 @@ fun MovieCard(
                         style = MaterialTheme.typography.h3
                     )
                 }
-                movie.voteAverage?.let {
+                multimedia.voteAverage?.let {
                     Text(
                         modifier = Modifier
                             .fillMaxSize()

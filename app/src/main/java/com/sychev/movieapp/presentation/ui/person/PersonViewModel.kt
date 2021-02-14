@@ -88,7 +88,7 @@ class PersonViewModel
 
     private suspend fun Movie.checkMovieForStatus() {
         this.id?.let{ id ->
-            val movie = repository.getMovieFromCache(id)
+            val movie = repository.getMultimediaFromCache(id)
             if (movie != null){
                 this.watchStatus = movie.watchStatus
             } else {

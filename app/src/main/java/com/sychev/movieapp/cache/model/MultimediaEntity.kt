@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "movie")
-data class MovieEntity(
+data class MultimediaEntity(
     @PrimaryKey val id: Int,
     val watchStatus: Boolean,
     val posterPath: String? = null,

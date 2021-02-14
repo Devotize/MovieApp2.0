@@ -9,14 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollableColumn
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
@@ -29,7 +27,6 @@ import com.sychev.movieapp.presentation.MainActivity
 import com.sychev.movieapp.presentation.ui.components.MovieCard
 import com.sychev.movieapp.presentation.ui.person.PersonEvent.GetPersonEvent
 import com.sychev.movieapp.presentation.ui.theme.AppTheme
-import com.sychev.movieapp.presentation.ui.theme.Grey2
 import com.sychev.movieapp.util.*
 import dagger.hilt.android.AndroidEntryPoint
 import java.math.RoundingMode

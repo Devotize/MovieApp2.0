@@ -54,7 +54,8 @@ fun AppTheme(
 
     MaterialTheme(
         colors = if (darkTheme) darkThemeColors else lightThemeColors,
-        typography = SpartanTypography
+        typography = SpartanTypography,
+        shapes = AppShapes
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
             if (!hasNetworkConnection) ConnectivityWindow()

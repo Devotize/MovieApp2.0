@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.sychev.movieapp.cache.dao.MovieDao
 import com.sychev.movieapp.cache.database.MovieDatabase
-import com.sychev.movieapp.cache.mapper.MovieEntityMapper
+import com.sychev.movieapp.cache.mapper.MultimediaEntityMapper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,7 +23,9 @@ object CacheModule {
             context,
             MovieDatabase::class.java,
             "movie_database"
-        ).build()
+        )
+           .fallbackToDestructiveMigration()
+           .build()
     }
 
     @Singleton
@@ -34,8 +36,8 @@ object CacheModule {
 
     @Singleton
     @Provides
-    fun provideMovieEntityMapper(): MovieEntityMapper {
-        return MovieEntityMapper()
+    fun provideMovieEntityMapper(): MultimediaEntityMapper {
+        return MultimediaEntityMapper()
     }
 
 }

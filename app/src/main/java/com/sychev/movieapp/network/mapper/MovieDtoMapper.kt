@@ -7,14 +7,13 @@ import com.sychev.movieapp.network.model.*
 import com.sychev.movieapp.network.model.MovieDto.*
 import com.sychev.movieapp.network.responses.CreditsResponse
 import com.sychev.movieapp.network.responses.PersonMovieCreditsResponse
+import com.sychev.movieapp.util.MediaType
 
 class MovieDtoMapper
     : DomainMovieMapper<MovieDto, Movie>,
     DomainCollectionMapper<CollectionDto, Movie.Collection>,
         DomainGenreMapper<GenreDto, Genre>,
-        DomainPersonCastMapper<CastDto, CrewDto, Person>,
-        DomainCreditsMapper<CreditsResponse, MovieCredits>,
-        DomainPersonMapper<PersonDto, Person>
+        DomainMultimediaMapper<MovieDto, Multimedia>
 {
 
     override fun toDomainMovie(model: MovieDto): Movie{
@@ -116,115 +115,49 @@ class MovieDtoMapper
             fromDomainGenre(it)
         }
     }
-
-    override fun toDomainPersonFromCastDto(model: CastDto): Person {
-        return Person(
-            gender = model.gender,
-            id = model.id,
-            knownForDepartment = model.knownForDepartment,
-            name = model.name,
-            popularity = model.popularity,
-            profilePath = model.profilePath,
-            character = model.character
-        )
-    }
-
-    override fun fromDomainPersonToCastDto(domainModel: Person): CastDto {
-        return CastDto(
-            gender = domainModel.gender,
-            id = domainModel.id,
-            knownForDepartment = domainModel.knownForDepartment,
-            name = domainModel.name,
-            popularity = domainModel.popularity,
-            profilePath = domainModel.profilePath
-        )
-    }
-
-    override fun toDomainPersonFromCrewDto(model: CrewDto): Person {
-        return Person(
-            gender = model.gender,
-            id = model.id,
-            knownForDepartment = model.knownForDepartment,
-            name = model.name,
-            popularity = model.popularity,
-            profilePath = model.profilePath,
-            job = model.job
-        )
-    }
-
-    override fun fromDomainPersonToCrewDto(domainModel: Person): CrewDto {
-        return CrewDto(
-            gender = domainModel.gender,
-            id = domainModel.id,
-            knownForDepartment = domainModel.knownForDepartment,
-            name = domainModel.name,
-            popularity = domainModel.popularity,
-            profilePath = domainModel.profilePath
-        )
-    }
-
-    override fun toDomainCredits(model: CreditsResponse): MovieCredits {
-        val cast = model.cast?.map {
-            toDomainPersonFromCastDto(it)
-        }
-        val crew = model.crew?.map{
-            toDomainPersonFromCrewDto(it)
-        }
-        return MovieCredits(
-            cast = cast,
-            crew = crew
-        )
-    }
-
-    override fun fromDomainCredits(domainModel: MovieCredits): CreditsResponse {
-        val cast = domainModel.cast?.map {
-            fromDomainPersonToCastDto(it)
-        }
-        val crew = domainModel.crew?.map{
-            fromDomainPersonToCrewDto(it)
-        }
-        return CreditsResponse(
-            cast = cast,
-            crew = crew
-        )
-    }
-
-    override fun toDomainPerson(model: PersonDto): Person {
-        return Person(
-            biography = model.biography,
-            birthDay = model.birthDay,
-            deathDay = model.deathDay,
-            gender = model.gender,
-            id = model.id,
-            imdbId = model.imdbId,
-            knownForDepartment = model.knownForDepartment,
-            name = model.name,
-            placeOfBirth = model.placeOfBirth,
-            popularity = model.popularity,
-            profilePath = model.profilePath,
-        )
-    }
-
-    override fun fromDomainPerson(domainModel: Person): PersonDto {
-        return PersonDto(
-            biography = domainModel.biography,
-            birthDay = domainModel.birthDay,
-            deathDay = domainModel.deathDay,
-            gender = domainModel.gender,
-            id = domainModel.id,
-            imdbId = domainModel.imdbId,
-            knownForDepartment = domainModel.knownForDepartment,
-            name = domainModel.name,
-            placeOfBirth = domainModel.placeOfBirth,
-            popularity = domainModel.popularity,
-            profilePath = domainModel.profilePath,
-        )
-    }
-
     fun toPersonMovieCredits(model: PersonMovieCreditsResponse): PersonMovieCredits {
         return PersonMovieCredits(
             cast = model.cast?.let { toDomainMovieList(it) },
             crew = model.crew?.let{toDomainMovieList(it)}
         )
+    }
+
+    override fun toDomainMultimedia(model: MovieDto): Multimedia {
+        return Multimedia(
+            posterPath = model.posterPath,
+            overview = model.overview,
+            releaseDate = model.releaseDate,
+            originalTitle = model.originalTitle,
+            id = model.id,
+            mediaType = MediaType.MOVIE.name,
+            title = model.title,
+            backdropPath = model.backdropPath,
+            popularity = model.popularity,
+            voteCount = model.voteCount,
+            voteAverage = model.voteAverage
+        )
+    }
+
+    override fun fromDomainMultimedia(domainModel: Multimedia): MovieDto {
+        return MovieDto(
+            posterPath = domainModel.posterPath,
+            overview = domainModel.overview,
+            releaseDate = domainModel.releaseDate,
+            originalTitle = domainModel.originalTitle,
+            id = domainModel.id,
+            title = domainModel.title,
+            backdropPath = domainModel.backdropPath,
+            popularity = domainModel.popularity,
+            voteCount = domainModel.voteCount,
+            voteAverage = domainModel.voteAverage,
+        )
+    }
+
+    override fun toDomainMultimediaList(list: List<MovieDto>): List<Multimedia> {
+        return list.map{toDomainMultimedia(it)}
+    }
+
+    override fun fromDomainMultimediaList(domainList: List<Multimedia>): List<MovieDto> {
+        return domainList.map{fromDomainMultimedia(it)}
     }
 }

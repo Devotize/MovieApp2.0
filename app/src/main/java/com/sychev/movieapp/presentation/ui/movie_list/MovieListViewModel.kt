@@ -7,6 +7,7 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sychev.movieapp.domain.model.Movie
+import com.sychev.movieapp.domain.model.Multimedia
 import com.sychev.movieapp.presentation.ui.movie_list.ListType.*
 import com.sychev.movieapp.presentation.ui.movie_list.MovieListEvent.*
 import com.sychev.movieapp.repository.MovieRepository
@@ -18,12 +19,13 @@ class MovieListViewModel
     private val repository: MovieRepository,
 ) : ViewModel() {
 
-    val movies: MutableState<List<Movie>> = mutableStateOf(ArrayList())
+    val multimedia: MutableState<List<Multimedia>> = mutableStateOf(ArrayList())
     val query: MutableState<String> = mutableStateOf("Transformers")
     val loading = mutableStateOf(false)
-    private val currentListType: MutableState<ListType> = mutableStateOf(SEARCH_LIST)
+    val currentListType: MutableState<ListType> = mutableStateOf(SEARCH_LIST)
     private val listScrollPosition = mutableStateOf(0)
     val page = mutableStateOf(1)
+    val currentCategory = mutableStateOf(Categories.MOVIE)
 
     init {
         onTriggerEvent(SearchMoviesEvent)
@@ -35,15 +37,18 @@ class MovieListViewModel
                 viewModelScope.launch {
                     currentListType.value = SEARCH_LIST
                     resetSearch()
-                    makeSearch()
+                    when (currentCategory.value) {
+                        Categories.MOVIE -> makeMovieSearch()
+                        Categories.TV_SHOW -> makeTvShowSearch()
+                    }
                 }
             }
             is AddMovieSearchToWatchedEvent -> {
                 viewModelScope.launch {
-                    if (event.movie.watchStatus == true) {
-                        event.movie.id?.let { deleteMovieById(it) }
+                    if (event.multimedia.watchStatus == true) {
+                        event.multimedia.id?.let { deleteMovieById(it) }
                     } else {
-                        addToWatched(event.movie)
+                        addToWatched(event.multimedia)
                     }
                     updateMovies()
                 }
@@ -51,10 +56,10 @@ class MovieListViewModel
             }
             is AddMovieSearchToWatchlistEvent -> {
                 viewModelScope.launch {
-                    if (event.movie.watchStatus == false) {
-                        event.movie.id?.let{deleteMovieById(it)}
+                    if (event.multimedia.watchStatus == false) {
+                        event.multimedia.id?.let{deleteMovieById(it)}
                     } else {
-                        addToWatchList(event.movie)
+                        addToWatchList(event.multimedia)
                     }
                     updateMovies()
                 }
@@ -81,10 +86,13 @@ class MovieListViewModel
                     nexPage()
                 }
             }
+            is ChangeCategoryEvent -> {
+                changeCategory(event.category)
+            }
         }
     }
 
-    private suspend fun makeSearch(){
+    private suspend fun makeMovieSearch(){
         loading.value = true
         val result = repository.searchMovies(
                 query = this.query.value,
@@ -92,12 +100,21 @@ class MovieListViewModel
             )
         loading.value = false
         if (result != null) {
-            movies.value = result
+            multimedia.value = result
             result.forEach { movieSearch ->
                 movieSearch.checkMovieForStatus()
             }
-            movies.value = result
+            multimedia.value = result
         }
+    }
+
+    private suspend fun makeTvShowSearch() {
+        loading.value = true
+        val result = repository.searchTvShows(
+            query = query.value,
+            page = page.value
+        )
+        loading.value = false
     }
 
     fun onQueryChange(query: String) {
@@ -108,7 +125,7 @@ class MovieListViewModel
         if (this.listScrollPosition.value + 1 == (20 * page.value) && currentListType.value == SEARCH_LIST) {
             loading.value = true
             page.value = page.value + 1
-            val newMovies = movies.value.toMutableList()
+            val newMovies = multimedia.value.toMutableList()
             val result = repository.searchMovies(
                 query = query.value,
                 page = page.value
@@ -120,8 +137,8 @@ class MovieListViewModel
                 newMovies.addAll(result)
             }
             Log.d(TAG, "nexPage triggeres: newMovies: $newMovies")
-            movies.value = listOf()
-            movies.value = newMovies
+            multimedia.value = listOf()
+            multimedia.value = newMovies
             loading.value = false
         }
 
@@ -130,18 +147,18 @@ class MovieListViewModel
 
     private suspend fun getWatchedMovies() {
         loading.value = true
-        movies.value = repository.getMoviesByStatus(true)
+        multimedia.value = repository.getMultimediaByStatus(true)
         loading.value = false
     }
 
     private suspend fun getWatchlistMovies() {
         loading.value = true
-        movies.value = repository.getMoviesByStatus(false)
+        multimedia.value = repository.getMultimediaByStatus(false)
         loading.value = false
     }
 
     private fun resetSearch() {
-        movies.value = listOf()
+        multimedia.value = listOf()
         page.value = 1
         listScrollPosition.value = 0
     }
@@ -151,9 +168,9 @@ class MovieListViewModel
 
     }
 
-    private suspend fun Movie.checkMovieForStatus() {
+    private suspend fun Multimedia.checkMovieForStatus() {
         this.id?.let{ id ->
-            val movie = repository.getMovieFromCache(id)
+            val movie = repository.getMultimediaFromCache(id)
             if (movie != null){
                 this.watchStatus = movie.watchStatus
             } else {
@@ -162,29 +179,34 @@ class MovieListViewModel
         }
     }
 
-    private suspend fun addToWatchList(movie: Movie) {
-        movie.watchStatus = false
-        repository.addMovieToCache(movie = movie)
+    private suspend fun addToWatchList(multimedia: Multimedia) {
+        multimedia.watchStatus = false
+        repository.addMultimediaToCache(multimedia = multimedia)
     }
 
     private suspend fun deleteMovieById(id: Int) {
         repository.deleteById(id)
     }
 
-    private suspend fun addToWatched(movie: Movie) {
-        movie.watchStatus = true
-        repository.addMovieToCache(movie = movie)
+    private suspend fun addToWatched(multimedia: Multimedia) {
+        multimedia.watchStatus = true
+        repository.addMultimediaToCache(multimedia = multimedia)
 
     }
 
     private suspend fun updateMovies() {
-        val movies = mutableListOf<Movie>()
-        movies.addAll(this.movies.value)
+        val movies = mutableListOf<Multimedia>()
+        movies.addAll(this.multimedia.value)
         movies.forEach {
             it.checkMovieForStatus()
         }
-        this.movies.value = listOf()
-        this.movies.value = movies
+        this.multimedia.value = listOf()
+        this.multimedia.value = movies
+    }
+    
+    private fun changeCategory(category: Categories) {
+        currentCategory.value = category
+        Log.d(TAG, "changeCategory: categoryChanged: $category")
     }
 }
 
