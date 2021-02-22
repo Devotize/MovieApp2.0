@@ -11,5 +11,6 @@ data class MultimediaEntity(
     val releaseDate: String? = null,
     val title: String? = null,
     val voteAverage: Float? = null,
+    val mediaType: String? = null
 ) {
 }

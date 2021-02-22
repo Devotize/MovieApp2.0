@@ -38,6 +38,13 @@ class MovieRepository_Impl(
             null
     }
 
+    override suspend fun searchMulti(query: String, page: Int): List<Multimedia>? {
+        return if (!connectivityManager.isActiveNetworkMetered)
+            multimediaMapperDto.toDomainMultimediaList(service.searchMulti(query = query, page = page).results)
+        else
+            null
+    }
+
     override suspend fun getMovieFromNetwork(id: Int): Movie {
         Log.d(TAG, "getMovieFromNetwork: movie: ${service.getMovie(id)}")
         return movieMapperDto.toDomainMovie(service.getMovie(id))

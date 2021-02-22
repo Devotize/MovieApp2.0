@@ -37,19 +37,22 @@ fun BottomBarMovieList(
 
             Icon(
                 imageVector = Icons.Default.List,
-                modifier = Modifier.clickable(onClick = onListClick)
+                modifier = Modifier.clickable(onClick = onListClick),
+                contentDescription = null
             )
 
 
             Icon(
                 imageVector = Icons.Default.Favorite,
-                modifier = Modifier.clickable(onClick = onFavoriteClick)
+                modifier = Modifier.clickable(onClick = onFavoriteClick),
+                contentDescription = null
             )
 
 
             Icon(
                 imageVector = Icons.Default.Done,
-                modifier = Modifier.clickable(onClick = onDoneClick)
+                modifier = Modifier.clickable(onClick = onDoneClick),
+                contentDescription = null
             )
 
         }

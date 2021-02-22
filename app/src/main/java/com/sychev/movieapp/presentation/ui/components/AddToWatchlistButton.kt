@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
@@ -16,7 +17,7 @@ import com.sychev.movieapp.presentation.ui.theme.Green400
 import com.sychev.movieapp.presentation.ui.theme.Grey2
 import com.sychev.movieapp.util.loadPicture
 
-@ExperimentalMaterialApi
+
 @Composable
 fun AddToWatchlistButton(
     modifier: Modifier,
@@ -30,16 +31,31 @@ fun AddToWatchlistButton(
         },
         shape = MaterialTheme.shapes.medium,
         colors = object : ButtonColors {
-            override fun backgroundColor(enabled: Boolean): Color {
+            @Composable
+            override fun backgroundColor(enabled: Boolean): State<Color> {
                 return if (watchStatus == false){
-                    Grey2
+                    object : State<Color> {
+                        override val value: Color
+                            get() = Grey2
+
+                    }
+
                 }else {
-                    Green400
+                    object : State<Color> {
+                        override val value: Color
+                            get() = Green400
+
+                    }
                 }
             }
 
-            override fun contentColor(enabled: Boolean): Color {
-                return Black1
+            @Composable
+            override fun contentColor(enabled: Boolean): State<Color> {
+                return object : State<Color>{
+                    override val value: Color
+                        get() = Black1
+
+                }
             }
         }
     ) {
@@ -55,6 +71,7 @@ fun AddToWatchlistButton(
                     .height(25.dp)
                     .padding(start = 8.dp),
                 bitmap = it.asImageBitmap(),
+                contentDescription = null
             )
         }
     }

@@ -74,7 +74,8 @@ class MovieFragment: Fragment() {
                                 bitmap = it.asImageBitmap(),
                                 modifier = Modifier
                                     .fillMaxSize(),
-                                contentScale = ContentScale.FillBounds
+                                contentScale = ContentScale.FillBounds,
+                                contentDescription = null
                             )
                         }
                         if (credits != null) {

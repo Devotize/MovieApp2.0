@@ -124,7 +124,7 @@ class TvShowDtoMapper:
             posterPath = model.posterPath,
             overview = model.overview,
             id = model.id,
-            mediaType = MediaType.TV.name,
+            mediaType = MediaType.TV.typeString,
             backdropPath = model.backdropPath,
             popularity = model.popularity,
             voteCount = model.voteCount,

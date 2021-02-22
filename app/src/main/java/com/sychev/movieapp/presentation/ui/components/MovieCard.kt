@@ -49,7 +49,8 @@ fun MovieCard(
                             .padding(4.dp)
                             .preferredHeight(250.dp),
                         contentScale = ContentScale.Fit,
-                        bitmap = bitmap.asImageBitmap()
+                        bitmap = bitmap.asImageBitmap(),
+                        contentDescription = null
                     )
                 }
 

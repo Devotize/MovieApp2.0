@@ -43,7 +43,8 @@ fun PersonCard(
                             .padding(4.dp)
                             .preferredWidth(120.dp)
                             .preferredHeight(150.dp),
-                        contentScale = ContentScale.FillBounds
+                        contentScale = ContentScale.FillBounds,
+                        contentDescription = null
                     )
                 }
             }

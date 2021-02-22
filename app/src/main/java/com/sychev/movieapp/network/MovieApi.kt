@@ -22,6 +22,12 @@ interface MovieApi {
         @Query("page") page: Int
     ): TvShowSearchResponse
 
+    @GET("search/multi")
+    suspend fun searchMulti(
+        @Query("query") query: String,
+        @Query("page") page: Int
+    ): MultiSearchResponse
+
     @GET("movie/{id}")
     suspend fun getMovie(@Path("id", encoded = true) id: Int): MovieDto
 

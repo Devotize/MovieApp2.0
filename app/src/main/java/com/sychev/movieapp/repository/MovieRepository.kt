@@ -8,6 +8,8 @@ interface MovieRepository {
 
     suspend fun searchTvShows(query: String, page: Int): List<Multimedia>?
 
+    suspend fun searchMulti(query: String, page: Int): List<Multimedia>?
+
     suspend fun getMovieFromNetwork(id: Int): Movie
 
     suspend fun getMultimediaByStatus(watchStatus: Boolean): List<Multimedia>

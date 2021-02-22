@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -17,7 +18,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.sychev.movieapp.presentation.ui.theme.*
 
-@ExperimentalMaterialApi
 @Composable
 fun SearchBar(
     query: String,
@@ -50,7 +50,10 @@ fun SearchBar(
                         )
                 },
                 leadingIcon = {
-                    Icon(Icons.Default.Search)
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = null
+                    )
                 },
                 keyboardOptions = KeyboardOptions.Companion.Default.copy(
                     imeAction = ImeAction.Search
@@ -77,12 +80,33 @@ fun SearchBar(
                         saveDarkThemeToPreferences()
                     },
                     colors = object : SwitchColors{
-                        override fun thumbColor(enabled: Boolean, checked: Boolean): Color {
-                            return if (checked) Green800 else Grey1
-                        }
+                        @Composable
+                        override fun thumbColor(enabled: Boolean, checked: Boolean): State<Color> {
+                            return if (checked) object : State<Color>{
+                                override val value: Color
+                                    get() = Green800
 
-                        override fun trackColor(enabled: Boolean, checked: Boolean): Color {
-                            return if (checked) Green300 else Color.DarkGray
+                            } else
+                                object : State<Color>{
+                                    override val value: Color
+                                        get() = Grey1
+
+                                }
+                        }
+                        @Composable
+                        override fun trackColor(enabled: Boolean, checked: Boolean): State<Color> {
+                            return if (checked)
+                                object : State<Color>{
+                                    override val value: Color
+                                        get() = Green300
+
+                                }
+                            else
+                                object : State<Color>{
+                                    override val value: Color
+                                        get() = Color.DarkGray
+
+                                }
                         }
                     }
                 )

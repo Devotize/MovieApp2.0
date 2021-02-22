@@ -8,6 +8,6 @@ const val API_LANGUAGE = "en-US"
 
 const val TAG = "AppDebug"
 
-enum class MediaType(name: String) {
+enum class MediaType(val typeString: String) {
     MOVIE("movie"), TV("tv"), PERSON("person")
 }

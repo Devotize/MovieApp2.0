@@ -5,7 +5,7 @@ import com.sychev.movieapp.domain.model.Multimedia
 
 
 sealed class MovieListEvent {
-    object SearchMoviesEvent : MovieListEvent()
+    object SearchEvent : MovieListEvent()
 
     class AddMovieSearchToWatchedEvent(val multimedia: Multimedia) : MovieListEvent()
 

@@ -6,7 +6,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sychev.movieapp.domain.model.Movie
 import com.sychev.movieapp.domain.model.Multimedia
 import com.sychev.movieapp.presentation.ui.movie_list.ListType.*
 import com.sychev.movieapp.presentation.ui.movie_list.MovieListEvent.*
@@ -28,18 +27,21 @@ class MovieListViewModel
     val currentCategory = mutableStateOf(Categories.MOVIE)
 
     init {
-        onTriggerEvent(SearchMoviesEvent)
+        onTriggerEvent(SearchEvent)
     }
 
     fun onTriggerEvent(event: MovieListEvent){
         when (event){
-            is SearchMoviesEvent -> {
+            is SearchEvent -> {
                 viewModelScope.launch {
                     currentListType.value = SEARCH_LIST
                     resetSearch()
                     when (currentCategory.value) {
                         Categories.MOVIE -> makeMovieSearch()
                         Categories.TV_SHOW -> makeTvShowSearch()
+                        Categories.PERSON -> {
+                        }
+                        Categories.MULTI_SEARCH -> makeMultiSearch()
                     }
                 }
             }
@@ -101,8 +103,8 @@ class MovieListViewModel
         loading.value = false
         if (result != null) {
             multimedia.value = result
-            result.forEach { movieSearch ->
-                movieSearch.checkMovieForStatus()
+            result.forEach { movie ->
+                movie.checkMovieForStatus()
             }
             multimedia.value = result
         }
@@ -114,6 +116,27 @@ class MovieListViewModel
             query = query.value,
             page = page.value
         )
+        if (result != null) {
+            result.forEach {
+                it.checkMovieForStatus()
+            }
+            multimedia.value = result
+        }
+        loading.value = false
+    }
+
+    private suspend fun makeMultiSearch() {
+        loading.value = true
+        val result = repository.searchMulti(
+            query = query.value,
+            page = page.value
+        )
+        if (result != null) {
+            result.forEach {
+                it.checkMovieForStatus()
+            }
+            multimedia.value = result
+        }
         loading.value = false
     }
 

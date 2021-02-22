@@ -5,7 +5,6 @@ import com.sychev.movieapp.domain.model.Movie.Genre
 import com.sychev.movieapp.domain.util.*
 import com.sychev.movieapp.network.model.*
 import com.sychev.movieapp.network.model.MovieDto.*
-import com.sychev.movieapp.network.responses.CreditsResponse
 import com.sychev.movieapp.network.responses.PersonMovieCreditsResponse
 import com.sychev.movieapp.util.MediaType
 
@@ -129,7 +128,7 @@ class MovieDtoMapper
             releaseDate = model.releaseDate,
             originalTitle = model.originalTitle,
             id = model.id,
-            mediaType = MediaType.MOVIE.name,
+            mediaType = MediaType.MOVIE.typeString,
             title = model.title,
             backdropPath = model.backdropPath,
             popularity = model.popularity,

@@ -15,9 +15,8 @@ import com.sychev.movieapp.domain.model.Movie
 import com.sychev.movieapp.domain.model.Multimedia
 import com.sychev.movieapp.util.loadPictureFromTMDB
 
-@ExperimentalMaterialApi
 @Composable
-fun MultimediaCard(
+fun MultimediaMovieCard(
     multimedia: Multimedia,
     addToWatched: (Multimedia) -> Unit,
     addToWatchList: (Multimedia) -> Unit,
@@ -49,7 +48,8 @@ fun MultimediaCard(
                             .padding(4.dp)
                             .preferredHeight(250.dp),
                         contentScale = ContentScale.Fit,
-                        bitmap = bitmap.asImageBitmap()
+                        bitmap = bitmap.asImageBitmap(),
+                        contentDescription = null
                     )
                 }
 
@@ -80,7 +80,7 @@ fun MultimediaCard(
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 multimedia.title?.let {
                     Text(
@@ -94,7 +94,6 @@ fun MultimediaCard(
                 multimedia.voteAverage?.let {
                     Text(
                         modifier = Modifier
-                            .fillMaxSize()
                             .padding(8.dp)
                             .align(Alignment.CenterVertically),
                         text = it.toString(),
@@ -103,6 +102,11 @@ fun MultimediaCard(
                         )
                 }
             }
+            Text(
+                modifier = Modifier.padding(8.dp),
+                text = "Movie",
+                style = MaterialTheme.typography.subtitle2
+            )
         }
     }
 }

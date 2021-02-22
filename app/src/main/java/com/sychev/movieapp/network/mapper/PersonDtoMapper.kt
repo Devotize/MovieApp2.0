@@ -3,7 +3,6 @@ package com.sychev.movieapp.network.mapper
 import com.sychev.movieapp.domain.model.MovieCredits
 import com.sychev.movieapp.domain.model.Multimedia
 import com.sychev.movieapp.domain.model.Person
-import com.sychev.movieapp.domain.model.PersonMovieCredits
 import com.sychev.movieapp.domain.util.DomainCreditsMapper
 import com.sychev.movieapp.domain.util.DomainMultimediaMapper
 import com.sychev.movieapp.domain.util.DomainPersonCastMapper
@@ -12,7 +11,6 @@ import com.sychev.movieapp.network.model.CastDto
 import com.sychev.movieapp.network.model.CrewDto
 import com.sychev.movieapp.network.model.PersonDto
 import com.sychev.movieapp.network.responses.CreditsResponse
-import com.sychev.movieapp.network.responses.PersonMovieCreditsResponse
 import com.sychev.movieapp.util.MediaType
 
 class PersonDtoMapper
@@ -128,7 +126,7 @@ class PersonDtoMapper
     override fun toDomainMultimedia(model: PersonDto): Multimedia {
         return Multimedia(
             id = model.id,
-            mediaType = MediaType.PERSON.name,
+            mediaType = MediaType.PERSON.typeString,
             popularity = model.popularity,
             name = model.name,
             profilePath = model.profilePath

@@ -7,12 +7,16 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollableColumn
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
@@ -24,7 +28,9 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.sychev.movieapp.R
 import com.sychev.movieapp.presentation.MainActivity
+import com.sychev.movieapp.presentation.ui.components.AnimatedPersonPicture
 import com.sychev.movieapp.presentation.ui.components.MovieCard
+import com.sychev.movieapp.presentation.ui.components.PictureState
 import com.sychev.movieapp.presentation.ui.person.PersonEvent.GetPersonEvent
 import com.sychev.movieapp.presentation.ui.theme.AppTheme
 import com.sychev.movieapp.util.*
@@ -60,6 +66,8 @@ class PersonFragment : Fragment() {
                     (activity as MainActivity).connectionLiveData.observeAsState(
                         initial = !(context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager).isActiveNetworkMetered
                     ).value
+                val showOnlyPicture = remember{mutableStateOf(false)}
+                val transitionState = remember { MutableTransitionState<PictureState>(PictureState.SMALL) }
 
                 AppTheme(
                     darkTheme = darkTheme,
@@ -75,7 +83,6 @@ class PersonFragment : Fragment() {
                             Surface(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .wrapContentWidth()
                                     .padding(8.dp),
                                 elevation = 16.dp
                             ) {
@@ -93,124 +100,143 @@ class PersonFragment : Fragment() {
                                             defaultImage = R.drawable.default_user_icon
                                         ).value
                                         image?.let {
-                                            Image(
-                                                bitmap = it.asImageBitmap(),
-                                                modifier = Modifier
-                                                    .preferredWidth(190.dp)
-                                                    .preferredHeight(240.dp),
-                                                contentScale = ContentScale.FillBounds
-                                            )
+                                            AnimatedPersonPicture(
+                                                transitionState = transitionState,
+                                                bitmap = it,
+                                                onClick = {
+                                                    transitionState.targetState = if
+                                                        (transitionState.targetState == PictureState.SMALL)
+                                                            PictureState.BIG
+                                                    else
+                                                        PictureState.SMALL
+                                                })
+//                                            Image(
+//                                                bitmap = it.asImageBitmap(),
+//                                                modifier = Modifier
+//                                                    .preferredWidth(190.dp)
+//                                                    .preferredHeight(240.dp),
+//                                                contentScale = ContentScale.FillBounds,
+//                                                contentDescription = null
+//                                            )
                                         }
-                                        Column(
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .preferredHeight(240.dp)
-                                                .padding(start = 8.dp),
-                                            verticalArrangement = Arrangement.SpaceBetween
-                                        ) {
-                                            person.birthDay?.let{ birthDay ->
-                                                Row(
-                                                    verticalAlignment = Alignment.CenterVertically
-                                                ) {
-                                                    val year = birthDay.substring(0 until birthDay.indexOf('-'))
-                                                    val month = birthDay.substring(year.length + 1 until year.length + 3)
-                                                    val day = birthDay.substring((year.length + month.length + 2)..birthDay.lastIndex)
-                                                    Text(text = "Born: ", style = MaterialTheme.typography.button)
-                                                    Text(
-                                                        text = "${getMonthByNumber(month.toInt())} $day, $year (age: ${getAgeByBirthDay(day.toInt(), month.toInt(), year.toInt())})",
-                                                        style = MaterialTheme.typography.subtitle2)
-                                                }
-                                            }
-                                            person.deathDay?.let{ deathDay ->
-                                                Row(
-                                                    verticalAlignment = Alignment.CenterVertically
-                                                ){
-                                                    val year = deathDay.substring(0 until deathDay.indexOf('-'))
-                                                    val month = deathDay.substring(year.length + 1 until year.length + 3)
-                                                    val day = deathDay.substring((year.length + month.length + 2)..deathDay.lastIndex)
-                                                    Text(text = "Died: ", style = MaterialTheme.typography.button)
-                                                    Text(text = "${getMonthByNumber(month.toInt())} $day, $year", style = MaterialTheme.typography.subtitle2)
-                                                }
-                                            }
-                                            person.popularity?.let{
-                                                Row(
-                                                    verticalAlignment = Alignment.CenterVertically
-                                                ) {
-                                                    Text(text = "Popularity: ", style = MaterialTheme.typography.button)
-                                                    Text(text = it.toBigDecimal().setScale(1,RoundingMode.HALF_EVEN).toString(), style = MaterialTheme.typography.subtitle2)
-                                                }
-                                            }
-                                            person.gender?.let{
-                                                if (it != 0) {
+                                        if (showOnlyPicture.value == false){
+                                            Column(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .preferredHeight(240.dp)
+                                                    .padding(start = 8.dp),
+                                                verticalArrangement = Arrangement.SpaceBetween
+                                            ) {
+                                                person.birthDay?.let{ birthDay ->
                                                     Row(
                                                         verticalAlignment = Alignment.CenterVertically
                                                     ) {
-                                                        Text(text = "Gender: ", style = MaterialTheme.typography.button)
-                                                        Text(text = if (it == 2) "Male" else "Female", style = MaterialTheme.typography.subtitle2)
+                                                        val year = birthDay.substring(0 until birthDay.indexOf('-'))
+                                                        val month = birthDay.substring(year.length + 1 until year.length + 3)
+                                                        val day = birthDay.substring((year.length + month.length + 2)..birthDay.lastIndex)
+                                                        Text(text = "Born: ", style = MaterialTheme.typography.button)
+                                                        Text(
+                                                            text = "${getMonthByNumber(month.toInt())} $day, $year (age: ${getAgeByBirthDay(day.toInt(), month.toInt(), year.toInt())})",
+                                                            style = MaterialTheme.typography.subtitle2)
                                                     }
                                                 }
-                                            }
-                                            person.placeOfBirth?.let{
-                                                Row() {
-                                                    Text(text = "Place of Birth: $it", style = MaterialTheme.typography.button)
+                                                person.deathDay?.let{ deathDay ->
+                                                    Row(
+                                                        verticalAlignment = Alignment.CenterVertically
+                                                    ){
+                                                        val year = deathDay.substring(0 until deathDay.indexOf('-'))
+                                                        val month = deathDay.substring(year.length + 1 until year.length + 3)
+                                                        val day = deathDay.substring((year.length + month.length + 2)..deathDay.lastIndex)
+                                                        Text(text = "Died: ", style = MaterialTheme.typography.button)
+                                                        Text(text = "${getMonthByNumber(month.toInt())} $day, $year", style = MaterialTheme.typography.subtitle2)
+                                                    }
+                                                }
+                                                person.popularity?.let{
+                                                    Row(
+                                                        verticalAlignment = Alignment.CenterVertically
+                                                    ) {
+                                                        Text(text = "Popularity: ", style = MaterialTheme.typography.button)
+                                                        Text(text = it.toBigDecimal().setScale(1,RoundingMode.HALF_EVEN).toString(), style = MaterialTheme.typography.subtitle2)
+                                                    }
+                                                }
+                                                person.gender?.let{
+                                                    if (it != 0) {
+                                                        Row(
+                                                            verticalAlignment = Alignment.CenterVertically
+                                                        ) {
+                                                            Text(text = "Gender: ", style = MaterialTheme.typography.button)
+                                                            Text(text = if (it == 2) "Male" else "Female", style = MaterialTheme.typography.subtitle2)
+                                                        }
+                                                    }
+                                                }
+                                                person.placeOfBirth?.let{
+                                                    Row() {
+                                                        Text(text = "Place of Birth: $it", style = MaterialTheme.typography.button)
+                                                    }
                                                 }
                                             }
                                         }
-                                    }
-                                    person.name?.let { name ->
-                                        Text(
-                                            modifier = Modifier
-                                                .padding(top = 8.dp),
-                                            text = name,
-                                            style = MaterialTheme.typography.h3
-                                        )
-                                    }
-                                    person.knownForDepartment?.let {
-                                        Text(
-                                            text = it,
-                                            style = MaterialTheme.typography.h5,
-                                            color = MaterialTheme.colors.onBackground
-                                        )
-                                    }
-                                }
-                            }
-                            Surface(
-                                modifier = Modifier.padding(8.dp),
-                                elevation = 16.dp,
-                                shape = MaterialTheme.shapes.medium,
-                            ) {
-                                Text(
-                                    modifier = Modifier.padding(4.dp),
-                                    text = "Movies: ", style = MaterialTheme.typography.h4
-                                )
-                            }
-                            movies?.let { movies ->
-                                LazyRow(
-                                    modifier = Modifier.padding(8.dp)
-                                ){
-                                    itemsIndexed(movies){ index, movie ->
-                                        MovieCard(
-                                            movie = movie,
-                                            addToWatched = {
-                                                viewModel.onTriggerEvent(PersonEvent.AddMovieToWatchedEvent(it))
-                                                           },
-                                            addToWatchList = {
-                                                viewModel.onTriggerEvent(PersonEvent.AddMovieToWatchlistEvent(it))
-                                                             },
-                                            onClick = {
-                                                movie.id?.let{ id ->
-                                                    val bundle = Bundle().apply {
-                                                        putInt("movieId", id)
-                                                    }
-                                                    findNavController().navigate(R.id.movieFragment, bundle)
-                                                }
 
-                                            }
-                                        )
+                                    }
+                                    if (showOnlyPicture.value == false) {
+                                        person.name?.let { name ->
+                                            Text(
+                                                modifier = Modifier
+                                                    .padding(top = 8.dp),
+                                                text = name,
+                                                style = MaterialTheme.typography.h3
+                                            )
+                                        }
+                                        person.knownForDepartment?.let {
+                                            Text(
+                                                text = it,
+                                                style = MaterialTheme.typography.h5,
+                                                color = MaterialTheme.colors.onBackground
+                                            )
+                                        }
                                     }
                                 }
                             }
-                        }
+                            if (showOnlyPicture.value == false) {
+                                Surface(
+                                    modifier = Modifier.padding(8.dp),
+                                    elevation = 16.dp,
+                                    shape = MaterialTheme.shapes.medium,
+                                ) {
+                                    Text(
+                                        modifier = Modifier.padding(4.dp),
+                                        text = "Movies: ", style = MaterialTheme.typography.h4
+                                    )
+                                }
+                                movies?.let { movies ->
+                                    LazyRow(
+                                        modifier = Modifier.padding(8.dp)
+                                    ){
+                                        itemsIndexed(movies){ index, movie ->
+                                            MovieCard(
+                                                movie = movie,
+                                                addToWatched = {
+                                                    viewModel.onTriggerEvent(PersonEvent.AddMovieToWatchedEvent(it))
+                                                },
+                                                addToWatchList = {
+                                                    viewModel.onTriggerEvent(PersonEvent.AddMovieToWatchlistEvent(it))
+                                                },
+                                                onClick = {
+                                                    movie.id?.let{ id ->
+                                                        val bundle = Bundle().apply {
+                                                            putInt("movieId", id)
+                                                        }
+                                                        findNavController().navigate(R.id.movieFragment, bundle)
+                                                    }
+
+                                                }
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                            }
+
                     }
                 }
             }

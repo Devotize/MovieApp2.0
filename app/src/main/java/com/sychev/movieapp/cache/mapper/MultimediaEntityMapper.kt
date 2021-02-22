@@ -5,6 +5,7 @@ import com.sychev.movieapp.domain.model.Movie
 import com.sychev.movieapp.domain.model.Multimedia
 import com.sychev.movieapp.domain.util.DomainMovieMapper
 import com.sychev.movieapp.domain.util.DomainMultimediaMapper
+import com.sychev.movieapp.util.MediaType
 
 class MultimediaEntityMapper
     :
@@ -19,7 +20,8 @@ class MultimediaEntityMapper
             posterPath = model.posterPath,
             releaseDate = model.releaseDate,
             title = model.title,
-            voteAverage = model.voteAverage
+            voteAverage = model.voteAverage,
+            mediaType = model.mediaType
         )
     }
 
@@ -30,7 +32,8 @@ class MultimediaEntityMapper
             posterPath = domainModel.posterPath,
             releaseDate = domainModel.releaseDate,
             title = domainModel.title,
-            voteAverage = domainModel.voteAverage
+            voteAverage = domainModel.voteAverage,
+            mediaType = domainModel.mediaType
         )
     }
 
@@ -60,7 +63,8 @@ class MultimediaEntityMapper
             posterPath = domainModel.posterPath,
             releaseDate = domainModel.releaseDate,
             title = domainModel.title,
-            voteAverage = domainModel.voteAverage
+            voteAverage = domainModel.voteAverage,
+            mediaType = MediaType.MOVIE.typeString
         )
     }
 
